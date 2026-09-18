@@ -210,8 +210,8 @@ export const StoreSettingsView: React.FC<StoreSettingsViewProps> = ({
         const ctx = canvas.getContext('2d');
         if (ctx) {
           ctx.drawImage(img, 0, 0, width, height);
-          // Optimized JPEG compression at quality 0.70 keeps file at ~35-55KB while preserving HD sharpness
-          callback(canvas.toDataURL('image/jpeg', quality));
+          // Optimized webp compression keeps file small while preserving HD sharpness AND transparency
+          callback(canvas.toDataURL('image/webp', quality));
         } else if (typeof e.target?.result === 'string') {
           callback(e.target.result);
         }

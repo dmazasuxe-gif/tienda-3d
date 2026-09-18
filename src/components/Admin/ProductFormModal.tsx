@@ -181,7 +181,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
           canvas.height = height;
           const ctx = canvas.getContext('2d');
           ctx?.drawImage(img, 0, 0, width, height);
-          resolve(canvas.toDataURL('image/jpeg', 0.8));
+          resolve(canvas.toDataURL('image/webp', 0.8));
         };
         img.onerror = (error) => reject(error);
       };
