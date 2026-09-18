@@ -3,7 +3,8 @@ import {
   Product, 
   Order, 
   StoreSettings, 
-  OrderStatus 
+  OrderStatus,
+  CategoryType 
 } from '../../types';
 import { 
   Package, 

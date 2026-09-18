@@ -1,7 +1,8 @@
 import React from 'react';
-import { CategoryType, TechType } from '../types';
+import { CategoryType, TechType, Product } from '../types';
 
 interface CategoryCardsSectionProps {
+  products: Product[];
   onSelectCategory: (category: CategoryType | 'all', techType: TechType | 'all') => void;
 }
 
@@ -34,12 +35,19 @@ const CATEGORY_CARDS = [
 ];
 
 export const CategoryCardsSection: React.FC<CategoryCardsSectionProps> = ({
+  products,
   onSelectCategory,
 }) => {
+  const activeCategories = CATEGORY_CARDS.filter(card => 
+    products.some(p => p.category === card.category)
+  );
+
+  if (activeCategories.length === 0) return null;
+
   return (
     <section className="py-10 max-w-[1400px] mx-auto px-4 sm:px-6">
       <div className="flex gap-4 overflow-x-auto pb-4 snap-x hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-        {CATEGORY_CARDS.map((card) => (
+        {activeCategories.map((card) => (
           <div
             key={card.title}
             onClick={() => onSelectCategory(card.category, 'all')}

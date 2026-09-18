@@ -721,6 +721,7 @@ export default function App() {
             <>
               {/* CATEGORÍAS 3-Card Section */}
               <CategoryCardsSection
+                products={products}
                 onSelectCategory={(cat, gen) => {
                   setSelectedCategory(cat);
                   setSelectedTechType(gen);

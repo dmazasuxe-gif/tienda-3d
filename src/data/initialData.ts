@@ -67,7 +67,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     name: "Mars 5 Ultra",
     description: "Impresora de resina de alta resolución con pantalla monocromática.",
     category: "impresoras_3d",
-    techType: "resina",
+    techType: "sla",
     brand: "Elegoo",
     price: 1699,
     images: [

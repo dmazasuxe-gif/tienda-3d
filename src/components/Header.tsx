@@ -10,9 +10,10 @@ import {
   MapPin,
   Bot
 } from 'lucide-react';
-import { StoreSettings, CategoryType, TechType } from '../types';
+import { StoreSettings, CategoryType, TechType, Product } from '../types';
 
 interface HeaderProps {
+  products?: Product[];
   settings: StoreSettings;
   cartCount: number;
   searchQuery: string;
@@ -43,7 +44,10 @@ export const Header: React.FC<HeaderProps> = ({
   onSelectCategoryFilter,
   onOpenTracking,
   cartBounceTrigger = 0,
-  showAdminButton = false,
+  showAdminButton = true,
+  currentCategory,
+  currentTechType,
+  products = [],
 }) => {
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -213,11 +217,21 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="px-4 mb-6">
                 <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3">Categorías</h3>
                 <div className="flex flex-col gap-1">
-                  <button onClick={() => handleCategoryClick('impresoras_3d')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Impresoras 3D</button>
-                  <button onClick={() => handleCategoryClick('filamentos')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Filamentos</button>
-                  <button onClick={() => handleCategoryClick('impresiones_3d')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Impresiones 3D</button>
-                  <button onClick={() => handleCategoryClick('corte_laser')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Corte Láser</button>
-                  <button onClick={() => handleCategoryClick('grabado_laser')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Grabado Láser</button>
+                  {products.some(p => p.category === 'impresoras_3d') && (
+                    <button onClick={() => handleCategoryClick('impresoras_3d')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Impresoras 3D</button>
+                  )}
+                  {products.some(p => p.category === 'filamentos') && (
+                    <button onClick={() => handleCategoryClick('filamentos')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Filamentos</button>
+                  )}
+                  {products.some(p => p.category === 'impresiones_3d') && (
+                    <button onClick={() => handleCategoryClick('impresiones_3d')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Impresiones 3D</button>
+                  )}
+                  {products.some(p => p.category === 'corte_laser') && (
+                    <button onClick={() => handleCategoryClick('corte_laser')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Corte Láser</button>
+                  )}
+                  {products.some(p => p.category === 'grabado_laser') && (
+                    <button onClick={() => handleCategoryClick('grabado_laser')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Grabado Láser</button>
+                  )}
                 </div>
               </div>
               
