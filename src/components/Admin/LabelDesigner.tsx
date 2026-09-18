@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { motion } from 'motion/react';
 import Barcode from 'react-barcode';
 import { toPng } from 'html-to-image';
-import { Printer, Download, Plus, Type, Image as ImageIcon, Barcode as BarcodeIcon, Trash2, X, Save, Tag, Hash, DollarSign } from 'lucide-react';
+import { Printer, Download, Type, Image as ImageIcon, Barcode as BarcodeIcon, Trash2, X, Save, Tag, Hash, DollarSign, Search } from 'lucide-react';
 import { PrintLabelPreview } from './PrintLabelPreview';
 import { useReactToPrint } from 'react-to-print';
-import { StoreSettings, LabelElement, LabelTemplate } from '../../types';
+import { StoreSettings, LabelElement, LabelTemplate, Product } from '../../types';
 
 // Common thermal printer sizes
 const LABEL_SIZES = [
@@ -18,23 +18,37 @@ const LABEL_SIZES = [
 interface LabelDesignerProps {
   settings?: StoreSettings;
   onSaveSettings?: (settings: StoreSettings) => void;
+  products?: Product[];
 }
 
-export const LabelDesigner: React.FC<LabelDesignerProps> = ({ settings, onSaveSettings }) => {
+export const LabelDesigner: React.FC<LabelDesignerProps> = ({ settings, onSaveSettings, products = [] }) => {
   const [elements, setElements] = useState<LabelElement[]>(settings?.labelTemplate?.elements || []);
   const [selectedElementId, setSelectedElementId] = useState<string | null>(null);
   const [currentSizeId, setCurrentSizeId] = useState<string>(settings?.labelTemplate?.sizeId || '50x25');
+  
+  // Product Search State
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const printRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
 
   const selectedSize = LABEL_SIZES.find(s => s.id === currentSizeId) || LABEL_SIZES[0];
   
-  // Escala para editar cómodamente en pantalla (203dpi = ~8 pixels por mm)
   const screenScale = 8; 
   const canvasWidthPx = selectedSize.width * screenScale;
   const canvasHeightPx = selectedSize.height * screenScale;
-  // Zona silenciosa recomendada para impresoras térmicas (aprox 2mm)
   const quietZonePx = 2 * screenScale;
+
+  // Filtrar productos
+  const filteredProducts = useMemo(() => {
+    if (!searchQuery) return [];
+    return products.filter(p => 
+      p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      p.sku?.toLowerCase().includes(searchQuery.toLowerCase())
+    ).slice(0, 5);
+  }, [searchQuery, products]);
 
   const handleAddText = () => {
     setElements([...elements, {
@@ -106,6 +120,28 @@ export const LabelDesigner: React.FC<LabelDesignerProps> = ({ settings, onSaveSe
     if (selectedElementId === id) setSelectedElementId(null);
   };
 
+  const handleSelectProduct = (product: Product) => {
+    setSelectedProduct(product);
+    setSearchQuery(product.name);
+    setIsDropdownOpen(false);
+
+    // Auto-fill variables on the canvas with the selected product's data
+    const updatedElements = elements.map(el => {
+      if (el.isVariable) {
+        let newContent = el.content;
+        switch (el.variableField) {
+          case 'productName': newContent = product.name; break;
+          case 'price': newContent = `S/ ${product.price.toFixed(2)}`; break;
+          case 'sku': newContent = product.sku || product.id.substring(0, 8); break;
+          case 'brand': newContent = product.brand || ''; break;
+        }
+        return { ...el, content: newContent };
+      }
+      return el;
+    });
+    setElements(updatedElements);
+  };
+
   const handlePrint = useReactToPrint({
     contentRef: previewRef,
     pageStyle: `
@@ -125,7 +161,7 @@ export const LabelDesigner: React.FC<LabelDesignerProps> = ({ settings, onSaveSe
       .print-label-container {
         filter: grayscale(100%) contrast(150%);
         transform-origin: top left;
-        transform: scale(calc(${selectedSize.width * 3.779527} / ${canvasWidthPx})); /* convert mm to px for exact scale */
+        transform: scale(calc(${selectedSize.width * 3.779527} / ${canvasWidthPx})); 
         width: ${canvasWidthPx}px !important;
         height: ${canvasHeightPx}px !important;
       }
@@ -155,6 +191,8 @@ export const LabelDesigner: React.FC<LabelDesignerProps> = ({ settings, onSaveSe
   const handleSaveTemplateGlobal = () => {
     if (!settings || !onSaveSettings) return;
 
+    // We save the template. Even if it has hardcoded values now due to testing with a product, 
+    // when ProductLabelPrinter prints it, it will overwrite 'isVariable' elements with that product's data.
     const template: LabelTemplate = {
       sizeId: currentSizeId,
       widthPx: canvasWidthPx,
@@ -166,7 +204,7 @@ export const LabelDesigner: React.FC<LabelDesignerProps> = ({ settings, onSaveSe
       ...settings,
       labelTemplate: template
     });
-    alert('Plantilla de etiqueta guardada correctamente para todos los productos.');
+    alert('Plantilla guardada. Esta plantilla se usará automáticamente cuando imprimas desde la lista de productos.');
   };
 
   const selectedEl = elements.find(el => el.id === selectedElementId);
@@ -175,25 +213,18 @@ export const LabelDesigner: React.FC<LabelDesignerProps> = ({ settings, onSaveSe
     <div className="flex flex-col xl:flex-row gap-6 bg-white p-4 sm:p-6 rounded-3xl border border-zinc-200 shadow-sm font-sans">
       
       {/* Sidebar Tools */}
-      <div className="w-full xl:w-72 flex flex-col gap-4 shrink-0">
+      <div className="w-full xl:w-72 flex flex-col gap-5 shrink-0">
+        
+        {/* Paso 1: Tamaño */}
         <div>
-          <h2 className="text-base font-black text-black uppercase tracking-wider mb-1">
-            Diseñador Pro
+          <h2 className="text-sm font-black text-black uppercase tracking-wider mb-3 flex items-center gap-2">
+            <span className="bg-black text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px]">1</span> 
+            Tamaño
           </h2>
-          <p className="text-xs text-zinc-500 mb-4">
-            Diseña la plantilla base para tus productos.
-          </p>
-          
-          <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-2">
-            Tamaño del Sticker
-          </label>
           <select 
             value={currentSizeId}
-            onChange={(e) => {
-              setCurrentSizeId(e.target.value);
-              // Podríamos resetear elementos, pero mejor los conservamos para que el usuario pueda ajustarlos
-            }}
-            className="w-full p-2 bg-zinc-50 border border-zinc-200 rounded-xl text-sm font-medium focus:outline-none focus:border-black transition-colors"
+            onChange={(e) => setCurrentSizeId(e.target.value)}
+            className="w-full p-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-sm font-medium focus:outline-none focus:border-black transition-colors cursor-pointer"
           >
             {LABEL_SIZES.map(size => (
               <option key={size.id} value={size.id}>{size.name}</option>
@@ -201,51 +232,85 @@ export const LabelDesigner: React.FC<LabelDesignerProps> = ({ settings, onSaveSe
           </select>
         </div>
 
-        <div className="h-px bg-zinc-100 my-1" />
-
-        <div className="space-y-4">
-          <div>
-            <label className="block text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-2">
-              Datos Dinámicos (Se autocompletan)
-            </label>
-            <div className="grid grid-cols-2 gap-2">
-              <button onClick={() => handleAddVariable('productName', '{NOMBRE_PRODUCTO}')} className="flex flex-col items-center justify-center gap-1 p-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 rounded-xl text-xs font-bold text-emerald-700 transition-colors">
-                <Tag className="w-4 h-4" /> Nombre
-              </button>
-              <button onClick={() => handleAddVariable('price', '{PRECIO}')} className="flex flex-col items-center justify-center gap-1 p-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 rounded-xl text-xs font-bold text-emerald-700 transition-colors">
-                <DollarSign className="w-4 h-4" /> Precio
-              </button>
-              <button onClick={() => handleAddVariable('sku', '{SKU}')} className="flex flex-col items-center justify-center gap-1 p-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 rounded-xl text-xs font-bold text-emerald-700 transition-colors">
-                <Hash className="w-4 h-4" /> SKU
-              </button>
-              <button onClick={handleAddBarcode} className="flex flex-col items-center justify-center gap-1 p-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 rounded-xl text-xs font-bold text-emerald-700 transition-colors">
-                <BarcodeIcon className="w-4 h-4" /> Código Barras
-              </button>
+        {/* Paso 2: Buscador */}
+        <div>
+          <h2 className="text-sm font-black text-black uppercase tracking-wider mb-3 flex items-center gap-2">
+            <span className="bg-black text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px]">2</span> 
+            Cargar Producto
+          </h2>
+          <div className="relative">
+            <div className="relative">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setIsDropdownOpen(true);
+                }}
+                onFocus={() => setIsDropdownOpen(true)}
+                placeholder="Buscar por nombre o SKU..."
+                className="w-full pl-9 pr-3 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-sm focus:outline-none focus:border-black transition-colors"
+              />
             </div>
+            
+            {isDropdownOpen && filteredProducts.length > 0 && (
+              <div className="absolute z-50 w-full mt-2 bg-white border border-zinc-200 rounded-xl shadow-xl overflow-hidden">
+                {filteredProducts.map(product => (
+                  <button
+                    key={product.id}
+                    onClick={() => handleSelectProduct(product)}
+                    className="w-full text-left px-4 py-3 hover:bg-zinc-50 border-b border-zinc-100 last:border-0"
+                  >
+                    <div className="text-sm font-bold text-slate-800">{product.name}</div>
+                    <div className="text-xs text-slate-500">SKU: {product.sku} - S/ {product.price.toFixed(2)}</div>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
+          <p className="text-[10px] text-zinc-500 mt-2 leading-tight">
+            Busca un producto para autocompletar la etiqueta actual y previsualizar cómo quedará.
+          </p>
+        </div>
 
-          <div>
-            <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-2">
-              Elementos Estáticos
+        {/* Paso 3: Elementos */}
+        <div>
+          <h2 className="text-sm font-black text-black uppercase tracking-wider mb-3 flex items-center gap-2">
+            <span className="bg-black text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px]">3</span> 
+            Agregar Elementos
+          </h2>
+          <div className="grid grid-cols-2 gap-2 mb-2">
+            <button onClick={() => handleAddVariable('productName', 'Nombre Producto')} className="flex flex-col items-center justify-center gap-1 p-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 rounded-xl text-xs font-bold text-emerald-700 transition-colors">
+              <Tag className="w-4 h-4" /> Nom. Dinámico
+            </button>
+            <button onClick={() => handleAddVariable('price', 'S/ 0.00')} className="flex flex-col items-center justify-center gap-1 p-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 rounded-xl text-xs font-bold text-emerald-700 transition-colors">
+              <DollarSign className="w-4 h-4" /> Precio Dinámico
+            </button>
+            <button onClick={() => handleAddVariable('sku', 'SKU-123')} className="flex flex-col items-center justify-center gap-1 p-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 rounded-xl text-xs font-bold text-emerald-700 transition-colors">
+              <Hash className="w-4 h-4" /> SKU Dinámico
+            </button>
+            <button onClick={handleAddBarcode} className="flex flex-col items-center justify-center gap-1 p-2 bg-blue-50 hover:bg-blue-100 border border-blue-100 rounded-xl text-xs font-bold text-blue-700 transition-colors">
+              <BarcodeIcon className="w-4 h-4" /> Código Barras
+            </button>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <button onClick={handleAddText} className="flex flex-col items-center justify-center gap-1 p-2 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 rounded-xl text-xs font-bold text-black transition-colors">
+              <Type className="w-4 h-4" /> Texto Fijo
+            </button>
+            <label className="flex flex-col items-center justify-center gap-1 p-2 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 rounded-xl text-xs font-bold text-black transition-colors cursor-pointer">
+              <ImageIcon className="w-4 h-4" /> Logo Fijo
+              <input type="file" accept="image/*" className="hidden" onChange={handleAddImage} />
             </label>
-            <div className="grid grid-cols-2 gap-2">
-              <button onClick={handleAddText} className="flex flex-col items-center justify-center gap-1 p-2 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 rounded-xl text-xs font-bold text-black transition-colors">
-                <Type className="w-4 h-4" /> Texto Fijo
-              </button>
-              <label className="flex flex-col items-center justify-center gap-1 p-2 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 rounded-xl text-xs font-bold text-black transition-colors cursor-pointer">
-                <ImageIcon className="w-4 h-4" /> Logo Fijo
-                <input type="file" accept="image/*" className="hidden" onChange={handleAddImage} />
-              </label>
-            </div>
           </div>
         </div>
 
+        {/* Editor de Propiedades */}
         {selectedEl && (
           <div className="mt-2 p-4 bg-zinc-50 border border-zinc-200 rounded-xl space-y-4">
             <div className="flex justify-between items-center">
               <h3 className="text-xs font-black text-black uppercase tracking-wider flex items-center gap-2">
                 Editar Elemento
-                {selectedEl.isVariable && <span className="bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded text-[9px]">Dinámico</span>}
               </h3>
               <button onClick={() => setSelectedElementId(null)} className="text-zinc-400 hover:text-black">
                 <X className="w-4 h-4" />
@@ -254,13 +319,16 @@ export const LabelDesigner: React.FC<LabelDesignerProps> = ({ settings, onSaveSe
 
             {selectedEl.type === 'text' && (
               <>
-                <input 
-                  type="text" 
-                  value={selectedEl.content} 
-                  onChange={(e) => updateElement(selectedEl.id, { content: e.target.value })}
-                  disabled={selectedEl.isVariable}
-                  className="w-full p-2 text-sm border border-zinc-200 rounded-lg focus:outline-none focus:border-black disabled:bg-zinc-100 disabled:text-zinc-500"
-                />
+                <div>
+                  <label className="text-[10px] font-bold text-zinc-500 uppercase">Texto</label>
+                  {/* Se quitó el bloqueo disabled={selectedEl.isVariable} */}
+                  <input 
+                    type="text" 
+                    value={selectedEl.content} 
+                    onChange={(e) => updateElement(selectedEl.id, { content: e.target.value })}
+                    className="w-full p-2 text-sm border border-zinc-200 rounded-lg focus:outline-none focus:border-black mt-1"
+                  />
+                </div>
                 <div className="flex gap-2">
                   <div className="flex-1">
                     <label className="text-[10px] font-bold text-zinc-500 uppercase">Tamaño</label>
@@ -268,7 +336,7 @@ export const LabelDesigner: React.FC<LabelDesignerProps> = ({ settings, onSaveSe
                       type="number" 
                       value={selectedEl.fontSize} 
                       onChange={(e) => updateElement(selectedEl.id, { fontSize: Number(e.target.value) })}
-                      className="w-full p-1 text-sm border border-zinc-200 rounded-lg"
+                      className="w-full p-2 text-sm border border-zinc-200 rounded-lg focus:outline-none mt-1"
                     />
                   </div>
                   <div className="flex-1">
@@ -276,7 +344,7 @@ export const LabelDesigner: React.FC<LabelDesignerProps> = ({ settings, onSaveSe
                     <select 
                       value={selectedEl.fontWeight} 
                       onChange={(e) => updateElement(selectedEl.id, { fontWeight: e.target.value })}
-                      className="w-full p-1 text-sm border border-zinc-200 rounded-lg"
+                      className="w-full p-2 text-sm border border-zinc-200 rounded-lg focus:outline-none mt-1"
                     >
                       <option value="normal">Normal</option>
                       <option value="bold">Bold</option>
@@ -289,13 +357,16 @@ export const LabelDesigner: React.FC<LabelDesignerProps> = ({ settings, onSaveSe
 
             {selectedEl.type === 'barcode' && (
               <>
-                <input 
-                  type="text" 
-                  value={selectedEl.content} 
-                  onChange={(e) => updateElement(selectedEl.id, { content: e.target.value })}
-                  disabled={selectedEl.isVariable}
-                  className="w-full p-2 text-sm border border-zinc-200 rounded-lg focus:outline-none focus:border-black disabled:bg-zinc-100 disabled:text-zinc-500"
-                />
+                <div>
+                  <label className="text-[10px] font-bold text-zinc-500 uppercase">Valor / Número del Código</label>
+                  {/* Se quitó el bloqueo para que puedan editar el código de barras libremente */}
+                  <input 
+                    type="text" 
+                    value={selectedEl.content} 
+                    onChange={(e) => updateElement(selectedEl.id, { content: e.target.value })}
+                    className="w-full p-2 text-sm border border-zinc-200 rounded-lg focus:outline-none focus:border-black mt-1"
+                  />
+                </div>
                 <div className="flex gap-2">
                   <div className="flex-1">
                     <label className="text-[10px] font-bold text-zinc-500 uppercase">Ancho</label>
@@ -304,7 +375,7 @@ export const LabelDesigner: React.FC<LabelDesignerProps> = ({ settings, onSaveSe
                       step="0.1"
                       value={selectedEl.width} 
                       onChange={(e) => updateElement(selectedEl.id, { width: Number(e.target.value) })}
-                      className="w-full p-1 text-sm border border-zinc-200 rounded-lg"
+                      className="w-full p-2 text-sm border border-zinc-200 rounded-lg mt-1"
                     />
                   </div>
                   <div className="flex-1">
@@ -313,7 +384,7 @@ export const LabelDesigner: React.FC<LabelDesignerProps> = ({ settings, onSaveSe
                       type="number" 
                       value={selectedEl.height} 
                       onChange={(e) => updateElement(selectedEl.id, { height: Number(e.target.value) })}
-                      className="w-full p-1 text-sm border border-zinc-200 rounded-lg"
+                      className="w-full p-2 text-sm border border-zinc-200 rounded-lg mt-1"
                     />
                   </div>
                 </div>
@@ -328,7 +399,7 @@ export const LabelDesigner: React.FC<LabelDesignerProps> = ({ settings, onSaveSe
                     type="number" 
                     value={selectedEl.width} 
                     onChange={(e) => updateElement(selectedEl.id, { width: Number(e.target.value) })}
-                    className="w-full p-1 text-sm border border-zinc-200 rounded-lg"
+                    className="w-full p-2 text-sm border border-zinc-200 rounded-lg"
                   />
                 </div>
                 <div className="flex-1">
@@ -337,7 +408,7 @@ export const LabelDesigner: React.FC<LabelDesignerProps> = ({ settings, onSaveSe
                     type="number" 
                     value={selectedEl.height} 
                     onChange={(e) => updateElement(selectedEl.id, { height: Number(e.target.value) })}
-                    className="w-full p-1 text-sm border border-zinc-200 rounded-lg"
+                    className="w-full p-2 text-sm border border-zinc-200 rounded-lg"
                   />
                 </div>
               </div>
@@ -365,14 +436,15 @@ export const LabelDesigner: React.FC<LabelDesignerProps> = ({ settings, onSaveSe
             <button 
               onClick={handleSaveTemplateGlobal}
               className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 rounded-xl text-sm font-bold text-white transition-colors cursor-pointer shadow-md"
+              title="Guarda este diseño para todos tus productos"
             >
-              <Save className="w-4 h-4" /> Guardar Plantilla Principal
+              <Save className="w-4 h-4" /> Guardar Plantilla
             </button>
             <button 
               onClick={handlePrint}
-              className="flex items-center gap-2 px-3 py-2 bg-black hover:bg-zinc-800 rounded-xl text-sm font-bold text-white transition-colors cursor-pointer"
+              className="flex items-center gap-2 px-4 py-2 bg-black hover:bg-zinc-800 rounded-xl text-sm font-bold text-white transition-colors cursor-pointer"
             >
-              <Printer className="w-4 h-4" /> Probar Impresión
+              <Printer className="w-4 h-4" /> Imprimir Etiqueta Actual
             </button>
             <button 
               onClick={handleSaveImage}
@@ -415,7 +487,7 @@ export const LabelDesigner: React.FC<LabelDesignerProps> = ({ settings, onSaveSe
                 drag
                 dragMomentum={false}
                 onDragEnd={(e, info) => updateElement(el.id, { 
-                  // Math.round to snap to nearest pixel roughly, or snap to grid (10px)
+                  // Math.round to snap to nearest pixel roughly, or snap to grid (5px)
                   x: Math.round((el.x + info.offset.x) / 5) * 5, 
                   y: Math.round((el.y + info.offset.y) / 5) * 5 
                 })}
@@ -437,9 +509,9 @@ export const LabelDesigner: React.FC<LabelDesignerProps> = ({ settings, onSaveSe
                   </div>
                 )}
                 {el.type === 'barcode' && (
-                  <div className="pointer-events-none bg-white p-1">
+                  <div className="pointer-events-none bg-white px-1">
                     <Barcode 
-                      value={el.content} 
+                      value={el.content || '000000'} 
                       width={el.width || 1.5} 
                       height={el.height || 40} 
                       displayValue={true}
@@ -471,6 +543,11 @@ export const LabelDesigner: React.FC<LabelDesignerProps> = ({ settings, onSaveSe
           aria-hidden="true" 
         >
           <div ref={previewRef}>
+            {/* 
+              In preview mode we pass the elements as they are, without injecting product 
+              because the product was already injected into the elements array physically 
+              when selected from the dropdown. 
+            */}
             <PrintLabelPreview 
               elements={elements} 
               widthPx={canvasWidthPx} 

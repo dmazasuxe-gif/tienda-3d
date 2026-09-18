@@ -426,6 +426,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           <LabelDesigner 
             settings={settings}
             onSaveSettings={onSaveSettings}
+            products={products}
           />
         )}
 
