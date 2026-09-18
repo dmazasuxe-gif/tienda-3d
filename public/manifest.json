@@ -1,7 +1,7 @@
 {
-  "name": "Aura Moda & Calzado - Admin",
-  "short_name": "Aura Admin",
-  "description": "Sistema de gestión y notificaciones de pedidos en tiempo real para Aura Moda & Calzado",
+  "name": "MQ3D - Admin",
+  "short_name": "MQ3D Admin",
+  "description": "Sistema de gestión y notificaciones de pedidos en tiempo real para MQ3D",
   "start_url": "/?mode=admin",
   "display": "standalone",
   "background_color": "#ffffff",

@@ -940,7 +940,7 @@ export default function App() {
                     />
                   ) : (
                     <span className="text-xl font-black tracking-tight text-black uppercase font-sans">
-                      {settings.storeName || 'AURA'}
+                      {settings.storeName || 'MQ3D'}
                     </span>
                   )}
                   <span className="hidden sm:inline text-zinc-300">|</span>
