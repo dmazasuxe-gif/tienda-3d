@@ -51,11 +51,9 @@ export const CategoryFilterBar: React.FC<CategoryFilterBarProps> = ({
   let categoryLabel = 'TODO EL CATÁLOGO';
   if (cat === 'impresoras_3d') categoryLabel = 'IMPRESORAS 3D';
   else if (cat === 'filamentos') categoryLabel = 'FILAMENTOS';
-  else if (cat === 'resinas') categoryLabel = 'RESINAS';
-  else if (cat === 'upgrades') categoryLabel = 'UPGRADES';
-  else if (cat === 'repuestos') categoryLabel = 'REPUESTOS';
-  else if (cat === 'cortadoras_laser') categoryLabel = 'CORTADORAS LÁSER';
-  else if (cat === 'routers_cnc') categoryLabel = 'ROUTERS CNC';
+  else if (cat === 'impresiones_3d') categoryLabel = 'IMPRESIONES 3D';
+  else if (cat === 'corte_laser') categoryLabel = 'CORTE LÁSER';
+  else if (cat === 'grabado_laser') categoryLabel = 'GRABADO LÁSER';
 
   return (
     <div className="space-y-4 mb-6">

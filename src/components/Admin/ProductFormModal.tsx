@@ -496,8 +496,11 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
                   onChange={(e) => setCategory(e.target.value as CategoryType)}
                   className="w-full px-3.5 py-2 bg-slate-50 border border-orange-200 rounded-2xl text-slate-900 focus:outline-none focus:bg-white focus:border-orange-500 cursor-pointer shadow-2xs font-medium"
                 >
-                  <option value="calzado">👟 Calzado</option>
-                  <option value="ropa">👔 Ropa</option>
+                  <option value="impresoras_3d">🖨️ Impresoras 3D</option>
+                  <option value="filamentos">🧵 Filamentos</option>
+                  <option value="impresiones_3d">🪴 Impresiones 3D</option>
+                  <option value="corte_laser">✂️ Corte Láser</option>
+                  <option value="grabado_laser">🔥 Grabado Láser</option>
                 </select>
               </div>
 

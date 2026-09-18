@@ -1,4 +1,4 @@
-export type CategoryType = 'impresoras_3d' | 'filamentos' | 'resinas' | 'upgrades' | 'repuestos' | 'cortadoras_laser' | 'routers_cnc';
+export type CategoryType = 'impresoras_3d' | 'filamentos' | 'impresiones_3d' | 'corte_laser' | 'grabado_laser';
 export type TechType = 'fdm' | 'resina' | 'laser' | 'cnc' | 'accesorio' | 'unisex';
 
 export type ElementType = 'barcode' | 'text' | 'image';

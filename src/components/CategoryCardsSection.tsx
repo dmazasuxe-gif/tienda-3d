@@ -17,29 +17,19 @@ const CATEGORY_CARDS = [
     imageUrl: 'https://images.unsplash.com/photo-1615286595561-2401dc228ff0?w=800&auto=format&fit=crop&q=80',
   },
   {
-    title: 'RESINAS',
-    category: 'resinas' as CategoryType,
-    imageUrl: 'https://images.unsplash.com/photo-1615286595561-2401dc228ff0?w=800&auto=format&fit=crop&q=80',
+    title: 'IMPRESIONES 3D',
+    category: 'impresiones_3d' as CategoryType,
+    imageUrl: 'https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?w=800&auto=format&fit=crop&q=80', // Maceta/Objeto
   },
   {
-    title: 'UPGRADES',
-    category: 'upgrades' as CategoryType,
-    imageUrl: 'https://images.unsplash.com/photo-1615286595561-2401dc228ff0?w=800&auto=format&fit=crop&q=80',
+    title: 'CORTE LÁSER',
+    category: 'corte_laser' as CategoryType,
+    imageUrl: 'https://images.unsplash.com/photo-1582216503923-a1df16f0ceb6?w=800&auto=format&fit=crop&q=80', // Láser
   },
   {
-    title: 'REPUESTOS',
-    category: 'repuestos' as CategoryType,
-    imageUrl: 'https://images.unsplash.com/photo-1615286595561-2401dc228ff0?w=800&auto=format&fit=crop&q=80',
-  },
-  {
-    title: 'CORTADORAS LÁSER',
-    category: 'cortadoras_laser' as CategoryType,
-    imageUrl: 'https://images.unsplash.com/photo-1615286595561-2401dc228ff0?w=800&auto=format&fit=crop&q=80',
-  },
-  {
-    title: 'ROUTERS CNC',
-    category: 'routers_cnc' as CategoryType,
-    imageUrl: 'https://images.unsplash.com/photo-1615286595561-2401dc228ff0?w=800&auto=format&fit=crop&q=80',
+    title: 'GRABADO LÁSER',
+    category: 'grabado_laser' as CategoryType,
+    imageUrl: 'https://images.unsplash.com/photo-1517436073-3b1b11789c62?w=800&auto=format&fit=crop&q=80', // Madera/Grabado
   }
 ];
 

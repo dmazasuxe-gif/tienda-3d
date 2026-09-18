@@ -215,11 +215,9 @@ export const Header: React.FC<HeaderProps> = ({
                 <div className="flex flex-col gap-1">
                   <button onClick={() => handleCategoryClick('impresoras_3d')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Impresoras 3D</button>
                   <button onClick={() => handleCategoryClick('filamentos')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Filamentos</button>
-                  <button onClick={() => handleCategoryClick('resinas')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Resinas</button>
-                  <button onClick={() => handleCategoryClick('upgrades')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Upgrades</button>
-                  <button onClick={() => handleCategoryClick('repuestos')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Repuestos</button>
-                  <button onClick={() => handleCategoryClick('cortadoras_laser')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Cortadoras Láser</button>
-                  <button onClick={() => handleCategoryClick('routers_cnc')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Routers CNC</button>
+                  <button onClick={() => handleCategoryClick('impresiones_3d')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Impresiones 3D</button>
+                  <button onClick={() => handleCategoryClick('corte_laser')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Corte Láser</button>
+                  <button onClick={() => handleCategoryClick('grabado_laser')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Grabado Láser</button>
                 </div>
               </div>
               
