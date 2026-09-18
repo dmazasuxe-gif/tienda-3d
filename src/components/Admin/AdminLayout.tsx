@@ -423,7 +423,10 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
 
         {/* Tab: Label Designer */}
         {activeTab === 'labels' && (
-          <LabelDesigner />
+          <LabelDesigner 
+            settings={settings}
+            onSaveSettings={onSaveSettings}
+          />
         )}
 
         {/* Tab 5: Settings */}
@@ -450,6 +453,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         product={printingProduct}
         currencySymbol={settings.currencySymbol}
         onPrintComplete={() => setPrintingProduct(null)}
+        settings={settings}
       />
 
     </div>

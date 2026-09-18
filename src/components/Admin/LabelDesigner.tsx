@@ -2,9 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import Barcode from 'react-barcode';
 import { toPng } from 'html-to-image';
-import { Printer, Download, Plus, Type, Image as ImageIcon, Barcode as BarcodeIcon, Trash2, X } from 'lucide-react';
+import { Printer, Download, Plus, Type, Image as ImageIcon, Barcode as BarcodeIcon, Trash2, X, Save, Tag, Hash, DollarSign } from 'lucide-react';
 import { PrintLabelPreview } from './PrintLabelPreview';
 import { useReactToPrint } from 'react-to-print';
+import { StoreSettings, LabelElement, LabelTemplate } from '../../types';
 
 // Common thermal printer sizes
 const LABEL_SIZES = [
@@ -14,35 +15,26 @@ const LABEL_SIZES = [
   { id: '100x150', name: 'Envío (100x150 mm)', width: 100, height: 150 },
 ];
 
-export type ElementType = 'barcode' | 'text' | 'image';
-
-export interface LabelElement {
-  id: string;
-  type: ElementType;
-  x: number;
-  y: number;
-  content: string; 
-  width?: number; 
-  height?: number; 
-  fontSize?: number;
-  fontWeight?: string;
-  fontFamily?: string;
+interface LabelDesignerProps {
+  settings?: StoreSettings;
+  onSaveSettings?: (settings: StoreSettings) => void;
 }
 
-export const LabelDesigner: React.FC = () => {
-  const [elements, setElements] = useState<LabelElement[]>([]);
+export const LabelDesigner: React.FC<LabelDesignerProps> = ({ settings, onSaveSettings }) => {
+  const [elements, setElements] = useState<LabelElement[]>(settings?.labelTemplate?.elements || []);
   const [selectedElementId, setSelectedElementId] = useState<string | null>(null);
-  const [currentSizeId, setCurrentSizeId] = useState<string>('50x25');
+  const [currentSizeId, setCurrentSizeId] = useState<string>(settings?.labelTemplate?.sizeId || '50x25');
   const printRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
 
   const selectedSize = LABEL_SIZES.find(s => s.id === currentSizeId) || LABEL_SIZES[0];
   
-  // A scale factor to make it editable comfortably on screen
-  // e.g., 50mm * 8 = 400px
+  // Escala para editar cómodamente en pantalla (203dpi = ~8 pixels por mm)
   const screenScale = 8; 
   const canvasWidthPx = selectedSize.width * screenScale;
   const canvasHeightPx = selectedSize.height * screenScale;
+  // Zona silenciosa recomendada para impresoras térmicas (aprox 2mm)
+  const quietZonePx = 2 * screenScale;
 
   const handleAddText = () => {
     setElements([...elements, {
@@ -50,10 +42,25 @@ export const LabelDesigner: React.FC = () => {
       type: 'text',
       x: 20,
       y: 20,
-      content: 'Texto Nuevo',
+      content: 'Texto Libre',
       fontSize: 16,
+      fontWeight: 'normal',
+      fontFamily: 'sans-serif'
+    }]);
+  };
+
+  const handleAddVariable = (field: 'productName' | 'price' | 'sku' | 'brand', defaultContent: string) => {
+    setElements([...elements, {
+      id: `var-${Date.now()}`,
+      type: 'text',
+      x: 20,
+      y: 20,
+      content: defaultContent,
+      fontSize: 14,
       fontWeight: 'bold',
-      fontFamily: 'Arial'
+      fontFamily: 'sans-serif',
+      isVariable: true,
+      variableField: field
     }]);
   };
 
@@ -63,9 +70,11 @@ export const LabelDesigner: React.FC = () => {
       type: 'barcode',
       x: 20,
       y: 20,
-      content: '123456789012',
+      content: '123456789',
       width: 1.5,
-      height: 40
+      height: 40,
+      isVariable: true,
+      variableField: 'sku'
     }]);
   };
 
@@ -101,7 +110,7 @@ export const LabelDesigner: React.FC = () => {
     contentRef: previewRef,
     pageStyle: `
       @page {
-        size: 80mm auto;
+        size: ${selectedSize.width}mm auto;
         margin: 0;
       }
       body {
@@ -114,10 +123,9 @@ export const LabelDesigner: React.FC = () => {
         print-color-adjust: exact;
       }
       .print-label-container {
-        /* Contraste estricto */
         filter: grayscale(100%) contrast(150%);
         transform-origin: top left;
-        transform: scale(calc(302 / ${canvasWidthPx}));
+        transform: scale(calc(${selectedSize.width * 3.779527} / ${canvasWidthPx})); /* convert mm to px for exact scale */
         width: ${canvasWidthPx}px !important;
         height: ${canvasHeightPx}px !important;
       }
@@ -144,19 +152,36 @@ export const LabelDesigner: React.FC = () => {
     }
   };
 
+  const handleSaveTemplateGlobal = () => {
+    if (!settings || !onSaveSettings) return;
+
+    const template: LabelTemplate = {
+      sizeId: currentSizeId,
+      widthPx: canvasWidthPx,
+      heightPx: canvasHeightPx,
+      elements: elements
+    };
+
+    onSaveSettings({
+      ...settings,
+      labelTemplate: template
+    });
+    alert('Plantilla de etiqueta guardada correctamente para todos los productos.');
+  };
+
   const selectedEl = elements.find(el => el.id === selectedElementId);
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 bg-white p-4 sm:p-6 rounded-3xl border border-zinc-200 shadow-sm animate-fade-in font-sans">
+    <div className="flex flex-col xl:flex-row gap-6 bg-white p-4 sm:p-6 rounded-3xl border border-zinc-200 shadow-sm font-sans">
       
       {/* Sidebar Tools */}
-      <div className="w-full md:w-64 flex flex-col gap-4 shrink-0">
+      <div className="w-full xl:w-72 flex flex-col gap-4 shrink-0">
         <div>
           <h2 className="text-base font-black text-black uppercase tracking-wider mb-1">
-            Diseñador de Etiquetas
+            Diseñador Pro
           </h2>
           <p className="text-xs text-zinc-500 mb-4">
-            Diseña stickers para impresoras térmicas (Ej: Zebra, Xprinter).
+            Diseña la plantilla base para tus productos.
           </p>
           
           <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-2">
@@ -164,7 +189,10 @@ export const LabelDesigner: React.FC = () => {
           </label>
           <select 
             value={currentSizeId}
-            onChange={(e) => setCurrentSizeId(e.target.value)}
+            onChange={(e) => {
+              setCurrentSizeId(e.target.value);
+              // Podríamos resetear elementos, pero mejor los conservamos para que el usuario pueda ajustarlos
+            }}
             className="w-full p-2 bg-zinc-50 border border-zinc-200 rounded-xl text-sm font-medium focus:outline-none focus:border-black transition-colors"
           >
             {LABEL_SIZES.map(size => (
@@ -173,34 +201,51 @@ export const LabelDesigner: React.FC = () => {
           </select>
         </div>
 
-        <div className="h-px bg-zinc-100 my-2" />
+        <div className="h-px bg-zinc-100 my-1" />
 
-        <div className="space-y-2">
-          <button 
-            onClick={handleAddBarcode}
-            className="w-full flex items-center gap-2 p-3 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 rounded-xl text-sm font-bold text-black transition-colors cursor-pointer"
-          >
-            <BarcodeIcon className="w-4 h-4" /> Agregar Código
-          </button>
-          
-          <button 
-            onClick={handleAddText}
-            className="w-full flex items-center gap-2 p-3 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 rounded-xl text-sm font-bold text-black transition-colors cursor-pointer"
-          >
-            <Type className="w-4 h-4" /> Agregar Texto
-          </button>
-          
-          <label className="w-full flex items-center gap-2 p-3 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 rounded-xl text-sm font-bold text-black transition-colors cursor-pointer">
-            <ImageIcon className="w-4 h-4" /> Subir Logo
-            <input type="file" accept="image/*" className="hidden" onChange={handleAddImage} />
-          </label>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-2">
+              Datos Dinámicos (Se autocompletan)
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              <button onClick={() => handleAddVariable('productName', '{NOMBRE_PRODUCTO}')} className="flex flex-col items-center justify-center gap-1 p-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 rounded-xl text-xs font-bold text-emerald-700 transition-colors">
+                <Tag className="w-4 h-4" /> Nombre
+              </button>
+              <button onClick={() => handleAddVariable('price', '{PRECIO}')} className="flex flex-col items-center justify-center gap-1 p-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 rounded-xl text-xs font-bold text-emerald-700 transition-colors">
+                <DollarSign className="w-4 h-4" /> Precio
+              </button>
+              <button onClick={() => handleAddVariable('sku', '{SKU}')} className="flex flex-col items-center justify-center gap-1 p-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 rounded-xl text-xs font-bold text-emerald-700 transition-colors">
+                <Hash className="w-4 h-4" /> SKU
+              </button>
+              <button onClick={handleAddBarcode} className="flex flex-col items-center justify-center gap-1 p-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 rounded-xl text-xs font-bold text-emerald-700 transition-colors">
+                <BarcodeIcon className="w-4 h-4" /> Código Barras
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-2">
+              Elementos Estáticos
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              <button onClick={handleAddText} className="flex flex-col items-center justify-center gap-1 p-2 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 rounded-xl text-xs font-bold text-black transition-colors">
+                <Type className="w-4 h-4" /> Texto Fijo
+              </button>
+              <label className="flex flex-col items-center justify-center gap-1 p-2 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 rounded-xl text-xs font-bold text-black transition-colors cursor-pointer">
+                <ImageIcon className="w-4 h-4" /> Logo Fijo
+                <input type="file" accept="image/*" className="hidden" onChange={handleAddImage} />
+              </label>
+            </div>
+          </div>
         </div>
 
         {selectedEl && (
-          <div className="mt-4 p-4 bg-zinc-50 border border-zinc-200 rounded-xl space-y-4">
+          <div className="mt-2 p-4 bg-zinc-50 border border-zinc-200 rounded-xl space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-xs font-black text-black uppercase tracking-wider">
+              <h3 className="text-xs font-black text-black uppercase tracking-wider flex items-center gap-2">
                 Editar Elemento
+                {selectedEl.isVariable && <span className="bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded text-[9px]">Dinámico</span>}
               </h3>
               <button onClick={() => setSelectedElementId(null)} className="text-zinc-400 hover:text-black">
                 <X className="w-4 h-4" />
@@ -213,7 +258,8 @@ export const LabelDesigner: React.FC = () => {
                   type="text" 
                   value={selectedEl.content} 
                   onChange={(e) => updateElement(selectedEl.id, { content: e.target.value })}
-                  className="w-full p-2 text-sm border border-zinc-200 rounded-lg focus:outline-none focus:border-black"
+                  disabled={selectedEl.isVariable}
+                  className="w-full p-2 text-sm border border-zinc-200 rounded-lg focus:outline-none focus:border-black disabled:bg-zinc-100 disabled:text-zinc-500"
                 />
                 <div className="flex gap-2">
                   <div className="flex-1">
@@ -247,7 +293,8 @@ export const LabelDesigner: React.FC = () => {
                   type="text" 
                   value={selectedEl.content} 
                   onChange={(e) => updateElement(selectedEl.id, { content: e.target.value })}
-                  className="w-full p-2 text-sm border border-zinc-200 rounded-lg focus:outline-none focus:border-black"
+                  disabled={selectedEl.isVariable}
+                  className="w-full p-2 text-sm border border-zinc-200 rounded-lg focus:outline-none focus:border-black disabled:bg-zinc-100 disabled:text-zinc-500"
                 />
                 <div className="flex gap-2">
                   <div className="flex-1">
@@ -307,42 +354,73 @@ export const LabelDesigner: React.FC = () => {
       </div>
 
       {/* Canvas Area */}
-      <div className="flex-1 flex flex-col min-w-0 bg-zinc-50 rounded-2xl border border-zinc-200 p-4 sm:p-8 overflow-hidden relative">
-        <div className="flex justify-end gap-3 mb-6">
-          <button 
-            onClick={handleSaveImage}
-            className="flex items-center gap-2 px-4 py-2 bg-white border border-zinc-200 hover:border-black rounded-xl text-sm font-bold text-black transition-colors cursor-pointer"
-          >
-            <Download className="w-4 h-4" /> Guardar (PNG)
-          </button>
-          <button 
-            onClick={handlePrint}
-            className="flex items-center gap-2 px-4 py-2 bg-black hover:bg-zinc-800 rounded-xl text-sm font-bold text-white transition-colors cursor-pointer shadow-md"
-          >
-            <Printer className="w-4 h-4" /> Imprimir
-          </button>
+      <div className="flex-1 flex flex-col min-w-0 bg-zinc-100 rounded-2xl border border-zinc-300 p-4 sm:p-8 overflow-hidden relative">
+        <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-red-100 border border-red-500 border-dashed"></div>
+            <span className="text-xs font-medium text-zinc-500">Zona Silenciosa (Evitar colocar código aquí)</span>
+          </div>
+
+          <div className="flex flex-wrap justify-end gap-2">
+            <button 
+              onClick={handleSaveTemplateGlobal}
+              className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 rounded-xl text-sm font-bold text-white transition-colors cursor-pointer shadow-md"
+            >
+              <Save className="w-4 h-4" /> Guardar Plantilla Principal
+            </button>
+            <button 
+              onClick={handlePrint}
+              className="flex items-center gap-2 px-3 py-2 bg-black hover:bg-zinc-800 rounded-xl text-sm font-bold text-white transition-colors cursor-pointer"
+            >
+              <Printer className="w-4 h-4" /> Probar Impresión
+            </button>
+            <button 
+              onClick={handleSaveImage}
+              className="flex items-center justify-center w-10 h-10 bg-white border border-zinc-200 hover:border-black rounded-xl text-black transition-colors cursor-pointer"
+              title="Descargar como Imagen"
+            >
+              <Download className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
-        <div className="flex-1 flex items-center justify-center overflow-auto p-4">
+        <div className="flex-1 flex items-center justify-center overflow-auto p-4 bg-zinc-200/50 rounded-xl inset-shadow-sm">
           {/* The Printable Container */}
           <div 
             ref={printRef}
-            className="relative bg-white shadow-lg overflow-hidden border border-zinc-200"
+            className="relative bg-white shadow-xl overflow-hidden border border-zinc-300 transition-all"
             style={{ 
               width: canvasWidthPx, 
               height: canvasHeightPx,
-              // Background pattern just to show it's a canvas, hidden on print via html2canvas if we set background to white, but we can leave it plain white
+              // Grilla para alinear
+              backgroundImage: 'radial-gradient(#e5e7eb 1px, transparent 1px)',
+              backgroundSize: '10px 10px'
             }}
             onClick={() => setSelectedElementId(null)}
           >
+            {/* Margen de seguridad visual (Quiet Zone) */}
+            <div 
+              className="absolute pointer-events-none border-2 border-red-400 border-dashed opacity-30"
+              style={{
+                top: quietZonePx,
+                left: quietZonePx,
+                right: quietZonePx,
+                bottom: quietZonePx,
+              }}
+            />
+
             {elements.map((el) => (
               <motion.div
                 key={el.id}
                 drag
                 dragMomentum={false}
-                onDragEnd={(e, info) => updateElement(el.id, { x: el.x + info.offset.x, y: el.y + info.offset.y })}
+                onDragEnd={(e, info) => updateElement(el.id, { 
+                  // Math.round to snap to nearest pixel roughly, or snap to grid (10px)
+                  x: Math.round((el.x + info.offset.x) / 5) * 5, 
+                  y: Math.round((el.y + info.offset.y) / 5) * 5 
+                })}
                 onClick={(e) => { e.stopPropagation(); setSelectedElementId(el.id); }}
-                className={`absolute cursor-move ${selectedElementId === el.id ? 'ring-2 ring-blue-500 ring-offset-1' : 'hover:ring-1 hover:ring-zinc-300 hover:ring-offset-1'}`}
+                className={`absolute cursor-move ${selectedElementId === el.id ? 'ring-2 ring-blue-500 ring-offset-1 z-10 bg-blue-50/50' : 'hover:ring-1 hover:ring-zinc-300 hover:ring-offset-1 z-0'}`}
                 style={{ x: el.x, y: el.y }}
               >
                 {el.type === 'text' && (
@@ -359,8 +437,7 @@ export const LabelDesigner: React.FC = () => {
                   </div>
                 )}
                 {el.type === 'barcode' && (
-                  <div className="pointer-events-none">
-                    {/* pointer-events-none is to prevent internal SVG elements from hijacking the drag */}
+                  <div className="pointer-events-none bg-white p-1">
                     <Barcode 
                       value={el.content} 
                       width={el.width || 1.5} 
@@ -384,8 +461,8 @@ export const LabelDesigner: React.FC = () => {
           </div>
         </div>
 
-        <div className="text-center mt-4 text-xs text-zinc-400 font-medium">
-          Dimensiones de trabajo: {canvasWidthPx}x{canvasHeightPx} px (Escala: {screenScale}x)
+        <div className="text-center mt-4 text-xs text-zinc-500 font-medium bg-zinc-100 p-2 rounded-lg inline-block self-center">
+          Medida real: {selectedSize.width}x{selectedSize.height} mm (Resolución emulada 203dpi)
         </div>
         
         {/* Contenedor oculto para la inyección HTML de impresión */}

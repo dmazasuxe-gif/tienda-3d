@@ -1,6 +1,30 @@
 export type CategoryType = 'impresoras_3d' | 'filamentos' | 'resinas' | 'upgrades' | 'repuestos' | 'cortadoras_laser' | 'routers_cnc';
 export type TechType = 'fdm' | 'resina' | 'laser' | 'cnc' | 'accesorio' | 'unisex';
 
+export type ElementType = 'barcode' | 'text' | 'image';
+
+export interface LabelElement {
+  id: string;
+  type: ElementType;
+  x: number;
+  y: number;
+  content: string; 
+  width?: number; 
+  height?: number; 
+  fontSize?: number;
+  fontWeight?: string;
+  fontFamily?: string;
+  isVariable?: boolean;
+  variableField?: 'productName' | 'price' | 'sku' | 'brand';
+}
+
+export interface LabelTemplate {
+  sizeId: string;
+  widthPx: number;
+  heightPx: number;
+  elements: LabelElement[];
+}
+
 export interface ProductColor {
   name: string;
   hex: string;
@@ -152,6 +176,9 @@ export interface StoreSettings {
     showOrderNotes?: boolean;
     showQrCode?: boolean;
   };
+  
+  // Plantilla Global de Etiquetas
+  labelTemplate?: LabelTemplate;
 }
 
 export interface Coupon {
