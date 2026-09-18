@@ -485,7 +485,7 @@ export default function App() {
         const orderedItem = newOrder.items.find((it) => it.product.id === p.id);
         if (orderedItem) {
           const nextStock = Math.max(0, p.stock - orderedItem.quantity);
-          // syncReduceStock(p.id, nextStock); // Removing this synchronous call, we will do it after state update
+          syncReduceStock(p.id, orderedItem.quantity);
           return { ...p, stock: nextStock };
         }
         return p;
