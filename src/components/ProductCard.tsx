@@ -22,28 +22,28 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick, sett
 
   return (
     <div 
-      className="group flex flex-col cursor-pointer bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 relative border border-zinc-100"
+      className="group flex flex-col cursor-pointer bg-white transition-all duration-400 hover:shadow-sm hover:-translate-y-1 relative border border-transparent hover:border-zinc-200 rounded-sm"
       onClick={() => onClick(product)}
     >
       {/* Image Container */}
       <div className="relative aspect-square w-full bg-zinc-50 overflow-hidden">
         {/* Badges */}
-        <div className="absolute top-3 left-3 flex flex-col gap-1 z-10">
+        <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
           {hasDiscount && (
-            <span className="bg-[#F0713D] text-white text-[11px] font-black w-8 h-8 rounded-full flex items-center justify-center shadow-xs">
+            <span className="bg-[#111111] text-white text-[10px] font-medium px-2 py-1 tracking-widest uppercase">
               -{discountPercent}%
             </span>
           )}
           {product.isNew && !hasDiscount && (
-            <span className="bg-[#F0713D] text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-xs uppercase tracking-wider">
+            <span className="bg-white border border-[#111111] text-[#111111] text-[10px] font-medium px-2 py-1 tracking-widest uppercase">
               NUEVO
             </span>
           )}
         </div>
 
         {/* Brand Badge */}
-        <div className="absolute top-3 right-3 z-10">
-           <span className="text-xs font-bold text-zinc-500 bg-white/80 backdrop-blur-md px-2 py-1 rounded-md">
+        <div className="absolute top-4 right-4 z-10">
+           <span className="text-[10px] font-medium tracking-widest uppercase text-zinc-500 bg-white/90 backdrop-blur-md px-2 py-1">
              {product.brand}
            </span>
         </div>
@@ -70,36 +70,36 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick, sett
       </div>
 
       {/* Info Container */}
-      <div className="p-4 flex flex-col flex-grow">
+      <div className="pt-4 pb-2 px-2 flex flex-col flex-grow items-center text-center">
         
         {/* Title */}
-        <h3 className="text-sm font-bold text-zinc-900 leading-tight mb-3 line-clamp-2 min-h-[40px]">
+        <h3 className="text-sm font-medium text-zinc-800 leading-snug mb-3 min-h-[40px] tracking-wide">
           {product.name}
         </h3>
 
-        <div className="mt-auto flex items-end justify-between">
-           {/* Status Badge */}
-           {isOutOfStock ? (
-             <span className="bg-red-100 text-red-600 text-[10px] font-bold px-2 py-1 rounded-full uppercase">
-               Agotado
-             </span>
-           ) : (
-             <span className="bg-[#F0713D] text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase">
-               En Stock
-             </span>
-           )}
-
+        <div className="mt-auto flex flex-col items-center gap-2">
            {/* Price */}
-           <div className="flex flex-col items-end">
+           <div className="flex items-center gap-3">
              {hasDiscount && (
-               <span className="text-xs text-zinc-400 line-through font-medium">
+               <span className="text-xs text-zinc-400 line-through">
                  {settings.currencySymbol} {product.originalPrice?.toLocaleString()}
                </span>
              )}
-             <span className="text-lg font-black text-[#F0713D]">
+             <span className="text-lg font-serif text-[#111111]">
                {settings.currencySymbol} {product.price.toLocaleString()}
              </span>
            </div>
+
+           {/* Status Badge */}
+           {isOutOfStock ? (
+             <span className="text-red-500 text-[10px] font-medium tracking-widest uppercase mt-1">
+               Agotado
+             </span>
+           ) : (
+             <span className="text-zinc-400 text-[10px] font-medium tracking-widest uppercase mt-1">
+               En Stock
+             </span>
+           )}
         </div>
       </div>
     </div>

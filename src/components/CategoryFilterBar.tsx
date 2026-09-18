@@ -59,11 +59,11 @@ export const CategoryFilterBar: React.FC<CategoryFilterBarProps> = ({
 
   return (
     <div className="space-y-4 mb-6">
-      <div className="text-left pt-2">
-        <span className="text-[11px] font-bold tracking-widest text-zinc-400 uppercase block mb-1">
-          PRODUCTOS
+      <div className="text-left pt-2 pb-2">
+        <span className="text-[10px] font-medium tracking-[0.2em] text-zinc-400 uppercase block mb-2">
+          COLECCIÓN
         </span>
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-black uppercase tracking-tight font-sans">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif text-[#111111] uppercase tracking-[0.1em]">
           {categoryLabel}
         </h1>
       </div>
@@ -76,9 +76,9 @@ export const CategoryFilterBar: React.FC<CategoryFilterBarProps> = ({
         <div className="flex items-center gap-2 flex-wrap">
           <button
             onClick={handleOpenDrawer}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-sm border text-xs font-medium transition-all cursor-pointer uppercase tracking-widest ${
               filterCount > 0 
-                ? 'bg-[#F0713D] text-white border-[#F0713D]' 
+                ? 'bg-[#111111] text-white border-[#111111]' 
                 : 'bg-white hover:bg-zinc-50 border-zinc-200 text-zinc-800'
             }`}
             id="btn-open-filter-drawer"
@@ -86,7 +86,7 @@ export const CategoryFilterBar: React.FC<CategoryFilterBarProps> = ({
             <SlidersHorizontal className="w-3.5 h-3.5" />
             <span>Filtros</span>
             {filterCount > 0 && (
-              <span className="ml-0.5 bg-white text-[#F0713D] px-1.5 py-0.2 rounded-full text-[10px] font-black">
+              <span className="ml-1 bg-white text-[#111111] px-1.5 py-0.5 rounded-sm text-[10px] font-bold">
                 {filterCount}
               </span>
             )}
@@ -97,7 +97,7 @@ export const CategoryFilterBar: React.FC<CategoryFilterBarProps> = ({
               <select
                 value={itemsPerPage}
                 onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
-                className="appearance-none bg-white hover:bg-zinc-50 text-zinc-800 text-xs font-semibold py-1.5 pl-3 pr-7 rounded-full border border-zinc-200 outline-none cursor-pointer"
+                className="appearance-none bg-white hover:bg-zinc-50 text-zinc-800 text-xs font-medium uppercase tracking-widest py-2 pl-4 pr-8 rounded-sm border border-zinc-200 outline-none cursor-pointer"
               >
                 <option value={12}>12 por página</option>
                 <option value={16}>16 por página</option>
@@ -112,7 +112,7 @@ export const CategoryFilterBar: React.FC<CategoryFilterBarProps> = ({
               <select
                 value={sortBy}
                 onChange={(e) => onSortChange(e.target.value as any)}
-                className="appearance-none bg-white hover:bg-zinc-50 text-zinc-800 text-xs font-semibold py-1.5 pl-3 pr-7 rounded-full border border-zinc-200 outline-none cursor-pointer"
+                className="appearance-none bg-white hover:bg-zinc-50 text-zinc-800 text-xs font-medium uppercase tracking-widest py-2 pl-4 pr-8 rounded-sm border border-zinc-200 outline-none cursor-pointer"
                 id="select-sort-by"
               >
                 <option value="popular">Orden predeterminado</option>

@@ -52,10 +52,27 @@ export const Banner: React.FC<BannerProps> = ({ settings }) => {
             className="w-full h-full object-cover object-center"
             referrerPolicy="no-referrer"
           />
-          {/* Subtle gradient overlay to ensure UI elements remain visible */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/40" />
         </motion.div>
       </AnimatePresence>
+
+      {/* Editorial Luxury Overlay Text & Button */}
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-white pointer-events-none px-4 text-center">
+        <span className="text-sm tracking-[0.3em] uppercase mb-4 opacity-90 font-medium">Nueva Colección</span>
+        <h2 className="text-4xl md:text-6xl lg:text-7xl font-serif tracking-widest mb-8 uppercase drop-shadow-md">
+          {settings.storeName || 'MQ3D'}
+        </h2>
+        <a 
+          href="#coleccion"
+          className="pointer-events-auto border border-white text-white bg-transparent hover:bg-white hover:text-black px-8 py-3 rounded-sm font-medium tracking-[0.15em] uppercase text-sm transition-all duration-300"
+          onClick={(e) => {
+            e.preventDefault();
+            window.scrollTo({ top: window.innerHeight * 0.7, behavior: 'smooth' });
+          }}
+        >
+          Explorar Colección
+        </a>
+      </div>
 
       {/* Navigation Controls (Visible on hover on desktop) */}
       {slides.length > 1 && (

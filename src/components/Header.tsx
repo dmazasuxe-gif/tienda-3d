@@ -70,8 +70,8 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="w-full bg-white shadow-sm sticky top-0 z-50 font-sans border-b border-zinc-200">
-      {/* Top Bar (Orange) */}
-      <div className="bg-[#F0713D] text-white text-xs py-1.5 px-4 hidden md:flex items-center justify-between">
+      {/* Top Bar (Luxury Black) */}
+      <div className="bg-[#111111] text-white text-xs py-2 px-4 hidden md:flex items-center justify-between">
         <div className="flex items-center gap-4">
           {topLinks.map((link) => (
             <a key={link} href="#" className="hover:text-white/80 transition-colors font-medium">
@@ -114,13 +114,13 @@ export const Header: React.FC<HeaderProps> = ({
               referrerPolicy="no-referrer"
             />
           ) : (
-            <span className="text-2xl font-black text-[#F0713D]">{settings.storeName}</span>
+            <span className="text-2xl font-serif text-[#111111] tracking-[0.2em]">{settings.storeName}</span>
           )}
         </div>
 
         {/* Categories Button (Desktop) */}
         <button 
-          className="hidden md:flex items-center gap-2 bg-[#F0713D] hover:bg-[#d95d28] text-white px-5 py-2.5 rounded-full font-bold text-sm transition-colors"
+          className="hidden md:flex items-center gap-2 bg-[#111111] hover:bg-[#333333] text-white px-6 py-2 rounded-sm font-medium text-sm transition-colors tracking-wide"
           onClick={() => setMobileMenuOpen(true)}
         >
           Categorías
@@ -133,21 +133,21 @@ export const Header: React.FC<HeaderProps> = ({
             placeholder="¿Buscas una impresora 3D para...?"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full bg-white border border-zinc-300 rounded-full py-2.5 pl-6 pr-12 text-sm focus:outline-none focus:border-[#F0713D] focus:ring-1 focus:ring-[#F0713D] transition-shadow placeholder:text-zinc-400"
+            className="w-full bg-white border border-zinc-200 rounded-sm py-2.5 pl-6 pr-12 text-sm focus:outline-none focus:border-[#111111] focus:ring-1 focus:ring-[#111111] transition-shadow placeholder:text-zinc-400"
           />
           <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
         </div>
 
         {/* Action Buttons */}
         <div className="flex items-center gap-3">
-          <button className="hidden lg:flex items-center gap-2 border border-[#F0713D] text-[#F0713D] hover:bg-[#fff5f2] px-4 py-2 rounded-full font-semibold text-sm transition-colors">
+          <button className="hidden lg:flex items-center gap-2 border border-zinc-200 text-zinc-600 hover:text-[#111111] hover:border-[#111111] px-5 py-2 rounded-sm font-medium text-sm transition-colors">
             <Bot className="w-4 h-4" />
             Asistente IA
           </button>
           
           <button 
             onClick={onOpenTracking}
-            className="hidden md:flex items-center gap-2 border border-[#F0713D] text-[#F0713D] hover:bg-[#fff5f2] px-4 py-2 rounded-full font-semibold text-sm transition-colors"
+            className="hidden md:flex items-center gap-2 border border-zinc-200 text-zinc-600 hover:text-[#111111] hover:border-[#111111] px-5 py-2 rounded-sm font-medium text-sm transition-colors"
           >
             <MapPin className="w-4 h-4" />
             Rastrear Pedidos
@@ -156,7 +156,7 @@ export const Header: React.FC<HeaderProps> = ({
           {showAdminButton && (
             <button 
               onClick={handleAdminClick}
-              className="hidden sm:flex items-center gap-2 text-zinc-700 hover:text-black font-semibold text-sm"
+              className="hidden sm:flex items-center gap-2 text-zinc-500 hover:text-[#111111] font-medium text-sm transition-colors"
             >
               <User className="w-4 h-4" />
               {isAdmin ? 'Panel' : 'Acceder'}
@@ -171,7 +171,7 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
 
           <button 
-            className="flex items-center gap-2 bg-white border border-zinc-200 hover:border-[#F0713D] text-zinc-800 px-4 py-2 rounded-full font-semibold transition-colors relative"
+            className="flex items-center gap-2 bg-white border border-zinc-200 hover:border-[#111111] text-zinc-800 px-5 py-2 rounded-sm font-medium transition-colors relative"
             onClick={onOpenCart}
           >
             <ShoppingBag className="w-5 h-5" />
@@ -189,7 +189,7 @@ export const Header: React.FC<HeaderProps> = ({
               placeholder="Buscar productos..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full bg-zinc-100 border-none rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#F0713D]"
+              className="w-full bg-zinc-50 border border-zinc-200 rounded-sm py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-[#111111]"
             />
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
           </div>
@@ -223,7 +223,7 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
               
               <div className="px-4 border-t border-zinc-100 pt-6">
-                <button onClick={handleAdminClick} className="w-full flex items-center justify-center gap-2 bg-[#F0713D] text-white py-3 rounded-xl font-bold">
+                <button onClick={handleAdminClick} className="w-full flex items-center justify-center gap-2 bg-[#111111] text-white py-3 rounded-sm font-medium tracking-wide">
                   <User className="w-5 h-5" />
                   {isAdmin ? 'Panel de Administración' : 'Acceso Administrador'}
                 </button>

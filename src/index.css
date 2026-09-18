@@ -2,15 +2,18 @@
 
 @layer base {
   :root {
-    --zinc-soft: #f4f4f5;
-    --zinc-border: #e4e4e7;
-    --text-primary: #09090b;
-    --text-secondary: #71717a;
+    --bg-main: #fdfbf7;
+    --bg-secondary: #f5f5f0;
+    --border-luxury: #e6e6e6;
+    --text-primary: #111111;
+    --text-secondary: #666666;
+    --zinc-soft: #fdfbf7; /* Fallback */
+    --zinc-border: #e6e6e6;
   }
 
   body {
-    background-color: #ffffff;
-    color: #09090b;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
     min-height: 100vh;
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
@@ -18,50 +21,50 @@
 
   /* Custom scrollbar in minimal clean zinc tones */
   ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 4px;
+    height: 4px;
   }
   ::-webkit-scrollbar-track {
-    background: #f4f4f5;
+    background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: #d4d4d8;
-    border-radius: 9999px;
+    background: #cccccc;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #a1a1aa;
+    background: #999999;
   }
 }
 
 /* Yolu Minimalist Card & UI Utilities */
 .yolu-card {
-  background-color: #f4f4f5;
-  border-radius: 1rem;
-  transition: all 0.25s ease-in-out;
+  background-color: #ffffff;
+  border: 1px solid var(--border-luxury);
+  transition: all 0.3s ease;
+  border-radius: 2px;
 }
 
 .yolu-card:hover {
-  background-color: #ededf0;
+  border-color: #999999;
 }
 
 .luxury-card {
   background-color: #ffffff;
-  border: 1px solid #e4e4e7;
-  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.04);
-  color: #09090b;
-  transition: all 0.2s ease-in-out;
+  border: 1px solid var(--border-luxury);
+  color: var(--text-primary);
+  transition: all 0.4s ease;
+  border-radius: 0px;
 }
 
 .luxury-card:hover {
-  border-color: #a1a1aa;
+  border-color: #111111;
 }
 
 .luxury-glass {
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: rgba(253, 251, 247, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid #e4e4e7;
-  color: #09090b;
+  border-bottom: 1px solid var(--border-luxury);
+  color: var(--text-primary);
 }
 
 .luxury-input {

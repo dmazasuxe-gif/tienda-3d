@@ -628,7 +628,7 @@ export default function App() {
     filters.selectedBrands.length === 0;
 
   return (
-    <div className="min-h-screen bg-[#fafafa] text-zinc-900 flex flex-col font-sans selection:bg-black selection:text-white">
+    <div className="min-h-screen bg-[var(--bg-main)] text-zinc-900 flex flex-col font-sans selection:bg-black selection:text-white">
       
       {/* If in Dedicated Admin / ERP Subdomain Mode */}
       {viewMode === 'admin' ? (
