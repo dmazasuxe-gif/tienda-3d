@@ -1870,16 +1870,7 @@ export const StoreSettingsView: React.FC<StoreSettingsViewProps> = ({
         </div>
       </div>
 
-      {/* 12. Pasarela de Imágenes de Productos */}
-      <div className="pt-2">
-        <ProductImagesManager 
-          settings={formData}
-          onSaveSettings={(newSettings) => {
-            setFormData(newSettings);
-            onSaveSettings(newSettings);
-          }}
-        />
-      </div>
+
 
       <ReceiptSettingsPanel 
         settings={formData} 

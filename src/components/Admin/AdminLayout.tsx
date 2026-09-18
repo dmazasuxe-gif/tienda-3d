@@ -23,7 +23,8 @@ import {
   Award,
   Barcode,
   Printer,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Images
 } from 'lucide-react';
 import { ProductFormModal } from './ProductFormModal';
 import { OrderManager } from './OrderManager';
@@ -186,8 +187,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
             { id: 'reports' as const, label: 'Reportes Financieros (PDF/Excel)', icon: TrendingUp },
             { id: 'stock' as const, label: 'Alertas de Stock', icon: AlertTriangle, count: lowStockCount, badgeColor: 'bg-rose-100 text-rose-700 border border-rose-200' },
             { id: 'labels' as const, label: 'Diseñador de Etiquetas', icon: Barcode },
-            { id: 'runway' as const, label: 'Pasarela de Imágenes', icon: ImageIcon, count: (settings.runwaySlides && settings.runwaySlides.length > 0) ? settings.runwaySlides.length : 0, badgeColor: 'bg-indigo-100 text-indigo-800 border border-indigo-200' },
-            { id: 'brands' as const, label: 'Pasarela de Marcas', icon: Award, count: (settings.brands && settings.brands.length > 0) ? settings.brands.filter(b => b.isActive).length : 8, badgeColor: 'bg-emerald-100 text-emerald-800 border border-emerald-200' },
+            { id: 'runway' as const, label: 'Banners Principales', icon: ImageIcon, count: (settings.runwaySlides && settings.runwaySlides.length > 0) ? settings.runwaySlides.length : 0, badgeColor: 'bg-indigo-100 text-indigo-800 border border-indigo-200' },
+            { id: 'brands' as const, label: 'Pasarela de Productos', icon: Images, count: (settings.productStripImages?.length || 0), badgeColor: 'bg-emerald-100 text-emerald-800 border border-emerald-200' },
             { id: 'settings' as const, label: 'Configuración Tienda & WhatsApp', icon: SettingsIcon }
           ].map((tab) => {
             const Icon = tab.icon;

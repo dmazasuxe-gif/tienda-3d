@@ -104,8 +104,14 @@ export interface StoreSettings {
   // Pasarela de Imágenes / Runway Slides
   runwaySlides?: RunwaySlide[];
 
-  // Pasarela de Marcas / Logos
+  // Pasarela de Marcas / Logos (Deprecado a favor de productStripImages)
   brands?: StoreBrand[];
+  productStripImages?: string[];
+  productStripSpeed?: number;
+
+  // Barra Superior Animada
+  topBarColor?: string;
+  topBarTexts?: string[];
 
   // Opciones y Métodos de Envío
   shippingOptions?: ShippingOption[];

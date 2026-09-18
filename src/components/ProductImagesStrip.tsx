@@ -27,7 +27,10 @@ export const ProductImagesStrip: React.FC<ProductImagesStripProps> = ({ settings
         <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-28 bg-gradient-to-l from-white via-white/80 to-transparent z-10" />
 
         {/* Continuous Gliding Track */}
-        <div className="animate-brand-runway flex items-center gap-10 sm:gap-16 md:gap-20 py-2">
+        <div 
+          className="animate-brand-runway flex items-center gap-10 sm:gap-16 md:gap-20 py-2"
+          style={{ animationDuration: settings?.productStripSpeed ? `${settings.productStripSpeed}s` : undefined }}
+        >
           {marqueeItems.map((imageUrl, idx) => (
             <div
               key={`${imageUrl}-${idx}`}

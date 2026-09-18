@@ -9,6 +9,7 @@ interface ProductImagesManagerProps {
 
 export const ProductImagesManager: React.FC<ProductImagesManagerProps> = ({ settings, onSaveSettings }) => {
   const [images, setImages] = useState<string[]>(settings.productStripImages || []);
+  const [speed, setSpeed] = useState<number>(settings.productStripSpeed || 30);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -56,7 +57,8 @@ export const ProductImagesManager: React.FC<ProductImagesManagerProps> = ({ sett
   const handleSave = () => {
     onSaveSettings({
       ...settings,
-      productStripImages: images
+      productStripImages: images,
+      productStripSpeed: speed
     });
     alert('Imágenes guardadas correctamente.');
   };
@@ -81,6 +83,22 @@ export const ProductImagesManager: React.FC<ProductImagesManagerProps> = ({ sett
         Sube imágenes de productos para mostrarlas en la pasarela animada de la tienda.
         Puedes arrastrarlas para cambiar su orden.
       </p>
+
+      {/* Speed Control */}
+      <div className="flex items-center gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-200">
+        <label className="text-slate-700 font-semibold whitespace-nowrap">Velocidad de Pasarela:</label>
+        <select
+          value={speed}
+          onChange={(e) => setSpeed(Number(e.target.value))}
+          className="bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-slate-700 outline-none focus:border-slate-500 w-full sm:w-auto cursor-pointer"
+        >
+          <option value={60}>Muy Lento</option>
+          <option value={45}>Lento</option>
+          <option value={30}>Normal</option>
+          <option value={15}>Rápido</option>
+          <option value={10}>Muy Rápido</option>
+        </select>
+      </div>
 
       {/* Upload Area */}
       <div 
