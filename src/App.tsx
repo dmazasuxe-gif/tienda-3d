@@ -45,7 +45,7 @@ import {
 // Public Components
 import { Header } from './components/Header';
 import { Banner } from './components/Banner';
-import { BrandsStrip } from './components/BrandsStrip';
+import { ProductImagesStrip } from './components/ProductImagesStrip';
 import { LiquidationSection } from './components/LiquidationSection';
 import { CategoryCardsSection } from './components/CategoryCardsSection';
 import { ProductCarouselSection } from './components/ProductCarouselSection';
@@ -913,15 +913,9 @@ export default function App() {
             )}
 
           </main>
-
           {/* Official Brands Gliding Runway - Positioned after the entire product catalog, before footer */}
-          <BrandsStrip
+          <ProductImagesStrip
             settings={settings}
-            onSelectBrand={(brand) => {
-              setFilters((prev) => ({ ...prev, selectedBrands: [brand] }));
-              setCurrentPage(1);
-              productsSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
-            }}
           />
 
           {/* Minimalist Store Footer matching Yolu */}

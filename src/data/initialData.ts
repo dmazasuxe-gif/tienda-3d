@@ -156,5 +156,17 @@ export const INITIAL_STORE_SETTINGS: StoreSettings = {
     showCustomerInfo: true,
     showOrderNotes: true,
     showQrCode: false
-  }
+  },
+  productStripImages: [
+    "/images/maceta_3d.jpg",
+    "/images/figura_3d.jpg",
+    "/images/objeto_cocina_3d.jpg",
+    "https://images.unsplash.com/photo-1629853925585-7098e94a8731?w=800&auto=format&fit=crop&q=80"
+  ],
+  topBarColor: "#111111",
+  topBarTexts: [
+    "✨ ENVÍOS GRATIS A TODO EL PERÚ",
+    "💎 CALIDAD PREMIUM EN IMPRESIÓN 3D",
+    "🚚 ENTREGA SEGURA Y RÁPIDA"
+  ]
 };

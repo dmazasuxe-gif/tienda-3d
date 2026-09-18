@@ -34,7 +34,7 @@ import {
   Printer
 } from 'lucide-react';
 import { ReceiptSettingsPanel } from './ReceiptSettingsPanel';
-import { BrandsManager } from './BrandsManager';
+import { ProductImagesManager } from './ProductImagesManager';
 import { playNotificationChime, requestPushPermission, getPushPermissionStatus, sendPushNotification } from '../../utils/sound';
 
 interface StoreSettingsViewProps {
@@ -798,6 +798,87 @@ export const StoreSettingsView: React.FC<StoreSettingsViewProps> = ({
             className="w-full px-3.5 py-2.5 bg-slate-50 border border-orange-200 rounded-2xl text-slate-900 focus:outline-none focus:bg-white focus:border-orange-500 shadow-2xs"
             placeholder="Ej. ✨ ENVÍO GRATIS en compras mayores a S/ 199 | 20% OFF en Calzado"
           />
+        </div>
+      </div>
+
+      {/* 4.5 Barra Superior Animada (Top Bar) */}
+      <div className="p-5 sm:p-6 rounded-3xl bg-white border border-orange-100 space-y-4 text-xs shadow-xs">
+        <h3 className="font-bold uppercase tracking-wider text-orange-800 text-xs flex items-center gap-1.5">
+          <Sparkles className="w-4 h-4 text-orange-600" />
+          <span>Barra Superior Animada (Top Bar)</span>
+        </h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Color Config */}
+          <div>
+            <label className="block text-slate-700 font-semibold mb-1.5">Color de Fondo de la Barra</label>
+            <div className="flex items-center gap-3">
+              <input
+                type="color"
+                value={formData.topBarColor || '#111111'}
+                onChange={(e) => setFormData({ ...formData, topBarColor: e.target.value })}
+                className="w-10 h-10 rounded cursor-pointer border-0 p-0"
+              />
+              <input
+                type="text"
+                value={formData.topBarColor || '#111111'}
+                onChange={(e) => setFormData({ ...formData, topBarColor: e.target.value })}
+                className="flex-1 px-3 py-2 bg-slate-50 border border-orange-200 rounded-xl text-slate-900 font-mono text-sm focus:outline-none focus:border-orange-500"
+                placeholder="#111111"
+              />
+            </div>
+            <p className="text-[10px] text-slate-400 mt-1">
+              El color por defecto es Negro (#111111).
+            </p>
+          </div>
+
+          {/* Texts Config */}
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-slate-700 font-semibold">Textos Deslizables (Marquee)</label>
+              <button
+                type="button"
+                onClick={() => {
+                  const current = formData.topBarTexts || [];
+                  setFormData({ ...formData, topBarTexts: [...current, 'Nuevo texto'] });
+                }}
+                className="text-[10px] bg-orange-100 text-orange-700 px-2 py-1 rounded font-bold hover:bg-orange-200"
+              >
+                + Agregar Texto
+              </button>
+            </div>
+            
+            <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
+              {(formData.topBarTexts || ['Envío Gratis', 'Impresoras 3D']).map((text, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={text}
+                    onChange={(e) => {
+                      const updated = [...(formData.topBarTexts || [])];
+                      updated[idx] = e.target.value;
+                      setFormData({ ...formData, topBarTexts: updated });
+                    }}
+                    className="flex-1 px-3 py-2 bg-slate-50 border border-orange-200 rounded-xl text-slate-900 focus:outline-none focus:border-orange-500"
+                    placeholder="Añade texto o emoji"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const updated = (formData.topBarTexts || []).filter((_, i) => i !== idx);
+                      setFormData({ ...formData, topBarTexts: updated });
+                    }}
+                    className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+              {(!formData.topBarTexts || formData.topBarTexts.length === 0) && (
+                <p className="text-xs text-slate-400 italic">No hay textos configurados. No se mostrará animación.</p>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1789,9 +1870,9 @@ export const StoreSettingsView: React.FC<StoreSettingsViewProps> = ({
         </div>
       </div>
 
-      {/* 12. Pasarela de Marcas & Logos de la Tienda */}
+      {/* 12. Pasarela de Imágenes de Productos */}
       <div className="pt-2">
-        <BrandsManager 
+        <ProductImagesManager 
           settings={formData}
           onSaveSettings={(newSettings) => {
             setFormData(newSettings);

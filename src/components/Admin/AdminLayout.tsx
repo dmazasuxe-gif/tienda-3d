@@ -31,7 +31,7 @@ import { ReportsView } from './ReportsView';
 import { StockAlertsView } from './StockAlertsView';
 import { StoreSettingsView } from './StoreSettingsView';
 import { BarcodeScannerView } from './BarcodeScannerView';
-import { BrandsManager } from './BrandsManager';
+import { ProductImagesManager } from './ProductImagesManager';
 import { RunwayManager } from './RunwayManager';
 import { LabelDesigner } from './LabelDesigner';
 import { ProductLabelPrinter } from './ProductLabelPrinter';
@@ -412,9 +412,9 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           />
         )}
 
-        {/* Tab: Brands Runway Manager */}
+        {/* Tab: Product Images Manager */}
         {activeTab === 'brands' && (
-          <BrandsManager
+          <ProductImagesManager
             settings={settings}
             onSaveSettings={onSaveSettings}
           />

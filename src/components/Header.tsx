@@ -70,24 +70,25 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="w-full bg-white shadow-sm sticky top-0 z-50 font-sans border-b border-zinc-200">
-      {/* Top Bar (Luxury Black) */}
-      <div className="bg-[#111111] text-white text-xs py-2 px-4 hidden md:flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          {topLinks.map((link) => (
-            <a key={link} href="#" className="hover:text-white/80 transition-colors font-medium">
-              {link}
-            </a>
+      {/* Dynamic Animated Top Bar */}
+      <div 
+        className="text-white text-xs py-2 overflow-hidden flex items-center relative z-50"
+        style={{ backgroundColor: settings.topBarColor || '#111111' }}
+      >
+        <div className="animate-promo-marquee whitespace-nowrap">
+          {[1, 2].map((group) => (
+            <div key={group} className="flex items-center">
+              {(settings.topBarTexts && settings.topBarTexts.length > 0
+                ? settings.topBarTexts
+                : ['✨ BIENVENIDO A MQ3D', '🚚 ENVÍOS A TODO EL PAÍS', '💎 DISEÑOS EXCLUSIVOS EN 3D']
+              ).map((text, idx) => (
+                <span key={idx} className="flex items-center font-medium tracking-wide">
+                  <span className="mx-6 sm:mx-10">{text}</span>
+                  <span className="opacity-30">•</span>
+                </span>
+              ))}
+            </div>
           ))}
-        </div>
-        <div className="flex items-center gap-6 font-medium">
-          <div className="flex items-center gap-1.5">
-            <MessageCircle className="w-3.5 h-3.5" />
-            <span>904 494 989 - 934 760 404 - 982 001 288</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <MapPin className="w-3.5 h-3.5" />
-            <span>{settings.storeAddress}</span>
-          </div>
         </div>
       </div>
 
