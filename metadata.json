@@ -1,0 +1,6 @@
+{
+  "name": "Aura Moda & Calzado",
+  "description": "Tienda virtual de calzado y ropa exclusiva con rastreo animado de envíos en tiempo real, soporte por WhatsApp y panel administrativo.",
+  "requestFramePermissions": ["notifications", "camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

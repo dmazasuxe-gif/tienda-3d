@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Products: All visitors can read products catalog; admin & checkout can update stock
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    
+    // Orders: Customers can create orders; anyone with order ID / admin can read & update status
+    match /orders/{orderId} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if true;
+    }
+    
+    // Store Settings: General store config, shipping, driver tracking, coupons
+    match /store_settings/{settingId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Default catch-all
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

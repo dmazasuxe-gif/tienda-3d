@@ -1,0 +1,286 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --zinc-soft: #f4f4f5;
+    --zinc-border: #e4e4e7;
+    --text-primary: #09090b;
+    --text-secondary: #71717a;
+  }
+
+  body {
+    background-color: #ffffff;
+    color: #09090b;
+    min-height: 100vh;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Custom scrollbar in minimal clean zinc tones */
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f4f4f5;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #d4d4d8;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #a1a1aa;
+  }
+}
+
+/* Yolu Minimalist Card & UI Utilities */
+.yolu-card {
+  background-color: #f4f4f5;
+  border-radius: 1rem;
+  transition: all 0.25s ease-in-out;
+}
+
+.yolu-card:hover {
+  background-color: #ededf0;
+}
+
+.luxury-card {
+  background-color: #ffffff;
+  border: 1px solid #e4e4e7;
+  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.04);
+  color: #09090b;
+  transition: all 0.2s ease-in-out;
+}
+
+.luxury-card:hover {
+  border-color: #a1a1aa;
+}
+
+.luxury-glass {
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid #e4e4e7;
+  color: #09090b;
+}
+
+.luxury-input {
+  background-color: #ffffff;
+  border: 1px solid #e4e4e7;
+  color: #09090b;
+  border-radius: 9999px;
+  transition: all 0.2s ease-in-out;
+}
+
+.luxury-input:focus {
+  outline: none;
+  border-color: #09090b;
+  box-shadow: 0 0 0 2px rgba(9, 9, 11, 0.1);
+}
+
+.luxury-input::placeholder {
+  color: #94a3b8;
+}
+
+/* Tracking Road & Courier Vehicle Animations */
+@keyframes roadFlow {
+  0% {
+    stroke-dashoffset: 40;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes carSuspension {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-2px) rotate(-0.5deg);
+  }
+  75% {
+    transform: translateY(1.5px) rotate(0.5deg);
+  }
+}
+
+@keyframes carWheels {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulseHalo {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0.2;
+  }
+}
+
+@keyframes deliveredGlow {
+  0%, 100% {
+    box-shadow: 0 0 25px rgba(16, 185, 129, 0.4), inset 0 0 15px rgba(16, 185, 129, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 45px rgba(16, 185, 129, 0.75), inset 0 0 25px rgba(16, 185, 129, 0.4);
+  }
+}
+
+.animate-road-flow {
+  animation: roadFlow 1s linear infinite;
+}
+
+.animate-car-drive {
+  animation: carSuspension 0.45s ease-in-out infinite;
+}
+
+.animate-car-wheels {
+  animation: carWheels 0.35s linear infinite;
+}
+
+.animate-pulse-halo {
+  animation: pulseHalo 2s ease-in-out infinite;
+}
+
+.animate-delivered-glow {
+  animation: deliveredGlow 2s ease-in-out infinite;
+}
+
+/* Tactile Soft Cart Bounce Animation */
+@keyframes cartSoftBounce {
+  0% {
+    transform: scale(1) translateY(0) rotate(0deg);
+  }
+  15% {
+    transform: scale(1.22, 0.82) translateY(2px) rotate(0deg);
+  }
+  35% {
+    transform: scale(0.9, 1.2) translateY(-9px) rotate(-6deg);
+  }
+  55% {
+    transform: scale(1.1, 0.94) translateY(-2px) rotate(4deg);
+  }
+  72% {
+    transform: scale(0.97, 1.03) translateY(-1px) rotate(-1deg);
+  }
+  88% {
+    transform: scale(1.02, 0.99) translateY(0) rotate(0deg);
+  }
+  100% {
+    transform: scale(1) translateY(0) rotate(0deg);
+  }
+}
+
+@keyframes badgeBouncePop {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.45) rotate(12deg);
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.85);
+  }
+  50% {
+    transform: scale(0.88) rotate(-6deg);
+  }
+  75% {
+    transform: scale(1.15) rotate(0deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes cartRippleEffect {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+@keyframes floatUpBadge {
+  0% {
+    opacity: 0;
+    transform: translateY(4px) scale(0.7);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.1);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(-16px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-26px) scale(0.85);
+  }
+}
+
+.animate-cart-bounce {
+  transform-origin: center bottom;
+  animation: cartSoftBounce 0.85s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.animate-badge-pop {
+  transform-origin: center;
+  animation: badgeBouncePop 0.85s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.animate-cart-ripple {
+  animation: cartRippleEffect 0.85s ease-out forwards;
+}
+
+.animate-float-up {
+  animation: floatUpBadge 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Continuous Brand Runway (Pasarela Dinámica en Movimiento) */
+@keyframes brandRunwayGlide {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-brand-runway {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: brandRunwayGlide 35s linear infinite;
+}
+
+.animate-brand-runway:hover {
+  animation-play-state: paused;
+}
+
+@media (max-width: 640px) {
+  .animate-brand-runway {
+    animation-duration: 25s;
+  }
+}
+
+
+@keyframes promoMarquee {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+.animate-promo-marquee {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: promoMarquee 15s linear infinite;
+}

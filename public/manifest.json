@@ -1,0 +1,23 @@
+{
+  "name": "Aura Moda & Calzado - Admin",
+  "short_name": "Aura Admin",
+  "description": "Sistema de gestión y notificaciones de pedidos en tiempo real para Aura Moda & Calzado",
+  "start_url": "/?mode=admin",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0284c7",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
