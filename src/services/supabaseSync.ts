@@ -17,7 +17,7 @@ export function subscribeToProducts(
     const { data, error } = await supabase.from(PRODUCTS_TABLE).select('*');
     if (error) {
       console.warn('[Supabase] Products fetch error, using local data:', error);
-      onUpdate(initialFallback);
+      // onUpdate(initialFallback); // Removed to prevent overriding local state
       return;
     }
     onUpdate(data as Product[]);
@@ -48,7 +48,7 @@ export function subscribeToOrders(
     const { data, error } = await supabase.from(ORDERS_TABLE).select('*').order('createdAt', { ascending: false });
     if (error) {
       console.warn('[Supabase] Orders fetch error, using local data:', error);
-      onUpdate(initialFallback);
+      // onUpdate(initialFallback); // Removed to prevent overriding local state
       return;
     }
     onUpdate(data as Order[]);
@@ -82,14 +82,14 @@ export function subscribeToStoreSettings(
         // No existe, crear inicial
         try {
           await supabase.from(SETTINGS_TABLE).insert({ id: 'general', ...initialFallback });
-          onUpdate(initialFallback);
+          // onUpdate(initialFallback);
         } catch (err) {
           console.warn('[Supabase] Error creating initial settings:', err);
-          onUpdate(initialFallback);
+          // onUpdate(initialFallback);
         }
       } else {
         console.warn('[Supabase] Settings fetch error, using local data:', error);
-        onUpdate(initialFallback);
+        // onUpdate(initialFallback); // Removed to prevent overriding local state
       }
       return;
     }
