@@ -167,7 +167,12 @@ export async function syncReduceStock(productId: string, quantityToDeduct: numbe
  */
 export async function syncCreateOrder(order: Order): Promise<void> {
   try {
-    const { error } = await supabase.from(ORDERS_TABLE).insert(order);
+    // Inject customerAddress mapping to satisfy existing Supabase NOT NULL constraint
+    const payload = {
+      ...order,
+      customerAddress: order.shippingAddress || 'N/A'
+    };
+    const { error } = await supabase.from(ORDERS_TABLE).insert(payload);
     if (error) throw error;
   } catch (err) {
     console.warn('[Supabase] Error creating order:', err);
