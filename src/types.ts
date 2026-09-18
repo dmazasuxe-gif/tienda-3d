@@ -1,4 +1,4 @@
-export type CategoryType = 'impresoras_3d' | 'filamentos' | 'impresiones_3d' | 'corte_laser' | 'grabado_laser';
+export type CategoryType = string;
 export type TechType = 'fdm' | 'sla' | 'laser_diodo' | 'laser_co2' | 'cnc' | 'otro';
 
 export type ElementType = 'barcode' | 'text' | 'image';
@@ -98,6 +98,7 @@ export interface Order {
 export interface StoreSettings {
   storeName: string;
   slogan: string;
+  categories?: string[];
   logoUrl: string;
   whatsappNumber: string; // e.g. "51987654321" (without + or spaces for api links)
   whatsappDisplayNumber: string; // e.g. "+51 987 654 321"

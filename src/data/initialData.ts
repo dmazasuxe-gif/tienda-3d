@@ -118,6 +118,7 @@ export const INITIAL_ORDERS: Order[] = [];
 export const INITIAL_STORE_SETTINGS: StoreSettings = {
   storeName: 'KREAR 3D',
   slogan: 'LÍDERES EN FABRICACIÓN DIGITAL',
+  categories: ['Impresoras 3D', 'Filamentos', 'Impresiones 3D', 'Corte Láser', 'Grabado Láser'],
   logoUrl: 'https://images.unsplash.com/photo-1629853925585-7098e94a8731?w=800&auto=format&fit=crop&q=80',
   whatsappNumber: '51982001288',
   whatsappDisplayNumber: '+51 982 001 288',

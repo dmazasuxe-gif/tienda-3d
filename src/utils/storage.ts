@@ -56,7 +56,10 @@ export const getStoredSettings = (): StoreSettings => {
         : INITIAL_STORE_SETTINGS.shippingOptions,
       coupons: (parsed.coupons && Array.isArray(parsed.coupons) && parsed.coupons.length > 0)
         ? parsed.coupons
-        : INITIAL_STORE_SETTINGS.coupons
+        : INITIAL_STORE_SETTINGS.coupons,
+      categories: (parsed.categories && Array.isArray(parsed.categories) && parsed.categories.length > 0)
+        ? parsed.categories
+        : INITIAL_STORE_SETTINGS.categories
     };
   } catch {
     return INITIAL_STORE_SETTINGS;

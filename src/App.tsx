@@ -622,13 +622,23 @@ export default function App() {
     setViewMode('store');
   };
 
-  const impresorasProducts = useMemo(() => {
-    return products.filter((p) => p.category === 'impresoras_3d');
-  }, [products]);
-
-  const filamentosProducts = useMemo(() => {
-    return products.filter((p) => p.category === 'filamentos');
-  }, [products]);
+  const productsByCategory = useMemo(() => {
+    const grouped: Record<string, Product[]> = {};
+    (settings.categories || []).forEach(cat => {
+      const catProducts = products.filter(p => p.category === cat);
+      if (catProducts.length > 0) {
+        grouped[cat] = catProducts;
+      }
+    });
+    // Add any products that belong to categories not in settings
+    products.forEach(p => {
+      if (!grouped[p.category] && (settings.categories || []).indexOf(p.category) === -1) {
+        if (!grouped[p.category]) grouped[p.category] = [];
+        grouped[p.category].push(p);
+      }
+    });
+    return grouped;
+  }, [products, settings.categories]);
 
   const isHomeView = 
     selectedCategory === 'all' && 
@@ -717,55 +727,23 @@ export default function App() {
 
           <Banner settings={settings} />
 
-          {/* EN LIQUIDACIÓN Section - Siempre Visible Inmediatamente Debajo de la Pasarela de Imágenes */}
-          <LiquidationSection
-            products={products}
-            settings={settings}
-            onOpenProduct={(p) => setSelectedProduct(p)}
-            onViewAllDiscounts={() => {
-              setFilters((prev) => ({ ...prev, onSaleOnly: true }));
-              setCurrentPage(1);
-            }}
-          />
-
           {/* Bloques Destacados de Carruseles (Visibles en Vista General / Home) */}
           {isHomeView && (
             <>
-              {/* CATEGORÍAS 3-Card Section */}
-              <CategoryCardsSection
-                products={products}
-                onSelectCategory={(cat, gen) => {
-                  setSelectedCategory(cat);
-                  setSelectedTechType(gen);
-                  setCurrentPage(1);
-                }}
-              />
-
-              {/* TOP 10 IMPRESORAS 3D Carousel */}
-              <ProductCarouselSection
-                title="TOP 10 IMPRESORAS 3D"
-                products={impresorasProducts}
-                settings={settings}
-                onOpenProduct={(p) => setSelectedProduct(p)}
-                onViewAll={() => {
-                  setSelectedCategory('all');
-                  setSelectedTechType('varones');
-                  setCurrentPage(1);
-                }}
-              />
-
-              {/* FILAMENTOS MÁS VENDIDOS Carousel */}
-              <ProductCarouselSection
-                title="FILAMENTOS MÁS VENDIDOS"
-                products={filamentosProducts}
-                settings={settings}
-                onOpenProduct={(p) => setSelectedProduct(p)}
-                onViewAll={() => {
-                  setSelectedCategory('all');
-                  setSelectedTechType('mujeres');
-                  setCurrentPage(1);
-                }}
-              />
+              {Object.entries(productsByCategory).map(([cat, catProducts]) => (
+                <ProductCarouselSection
+                  key={cat}
+                  title={`${cat.toUpperCase()} DESTACADOS`}
+                  products={catProducts}
+                  settings={settings}
+                  onOpenProduct={(p) => setSelectedProduct(p)}
+                  onViewAll={() => {
+                    setSelectedCategory(cat);
+                    setSelectedTechType('all');
+                    setCurrentPage(1);
+                  }}
+                />
+              ))}
             </>
           )}
 

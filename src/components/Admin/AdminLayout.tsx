@@ -243,7 +243,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                 </div>
 
                 <div className="flex gap-1">
-                  {(['all', 'impresoras_3d', 'filamentos', 'impresiones_3d', 'corte_laser', 'grabado_laser'] as const).map((cat) => (
+                  {['all', ...(settings.categories || [])].map((cat) => (
                     <button
                       key={cat}
                       onClick={() => setProductCategoryFilter(cat as 'all' | CategoryType)}
@@ -253,7 +253,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                           : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200'
                       }`}
                     >
-                      {cat === 'all' ? 'Todos' : cat.replace(/_/g, ' ')}
+                      {cat === 'all' ? 'Todos' : cat}
                     </button>
                   ))}
                 </div>
@@ -460,6 +460,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         productToEdit={productToEdit}
         initialBarcode={initialBarcode}
         settings={settings}
+        onUpdateSettings={onSaveSettings}
       />
 
       <ProductLabelPrinter

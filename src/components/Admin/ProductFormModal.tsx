@@ -10,6 +10,7 @@ interface ProductFormModalProps {
   productToEdit?: Product | null;
   initialBarcode?: string;
   settings: StoreSettings;
+  onUpdateSettings?: (settings: StoreSettings) => void;
 }
 
 const COMMON_SHOE_SIZES = ['35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45'];
@@ -36,7 +37,8 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
   onSave,
   productToEdit,
   initialBarcode,
-  settings
+  settings,
+  onUpdateSettings
 }) => {
   if (!isOpen) return null;
 
@@ -44,8 +46,10 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
   const [sku, setSku] = useState('');
   const [barcode, setBarcode] = useState('');
   const [description, setDescription] = useState('');
-  const [category, setCategory] = useState<CategoryType>('calzado');
-  const [techType, setTechType] = useState<TechType>('varones');
+  const [category, setCategory] = useState<CategoryType>('');
+  const [techType, setTechType] = useState<TechType>('fdm');
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
   const [brand, setBrand] = useState('Nike');
   const [price, setPrice] = useState(199);
   const [originalPrice, setOriginalPrice] = useState<number | undefined>(undefined);
@@ -128,8 +132,8 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
       setSku(`PROD-${Math.floor(1000 + Math.random() * 9000)}`);
       setBarcode(initialBarcode || '');
       setDescription('');
-      setCategory('calzado');
-      setTechType('varones');
+      setCategory(settings.categories?.[0] || '');
+      setTechType('fdm');
       setBrand('Marca');
       setPrice(150);
       setOriginalPrice(undefined);
@@ -232,6 +236,26 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
         { name: customColorName.trim(), hex: customColorHex }
       ]);
       setCustomColorName('');
+    }
+  };
+
+  const handleAddCategory = () => {
+    if (newCategoryName.trim() && onUpdateSettings) {
+      const updatedCategories = [...(settings.categories || []), newCategoryName.trim()];
+      onUpdateSettings({ ...settings, categories: updatedCategories });
+      setCategory(newCategoryName.trim());
+      setNewCategoryName('');
+      setIsAddingCategory(false);
+    }
+  };
+
+  const handleRemoveCategory = (catToRemove: string) => {
+    if (onUpdateSettings) {
+      const updatedCategories = (settings.categories || []).filter(c => c !== catToRemove);
+      onUpdateSettings({ ...settings, categories: updatedCategories });
+      if (category === catToRemove) {
+        setCategory(updatedCategories[0] || '');
+      }
     }
   };
 
@@ -489,18 +513,58 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
             {/* Category, Gender, Brand */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Categoría *</label>
-                <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value as CategoryType)}
-                  className="w-full px-3.5 py-2 bg-slate-50 border border-orange-200 rounded-2xl text-slate-900 focus:outline-none focus:bg-white focus:border-orange-500 cursor-pointer shadow-2xs font-medium"
-                >
-                  <option value="impresoras_3d">🖨️ Impresoras 3D</option>
-                  <option value="filamentos">🧵 Filamentos</option>
-                  <option value="impresiones_3d">🪴 Impresiones 3D</option>
-                  <option value="corte_laser">✂️ Corte Láser</option>
-                  <option value="grabado_laser">🔥 Grabado Láser</option>
-                </select>
+                <label className="block text-slate-700 font-semibold mb-1 flex justify-between items-center">
+                  <span>Categoría *</span>
+                  <button 
+                    type="button" 
+                    onClick={() => setIsAddingCategory(!isAddingCategory)}
+                    className="text-orange-500 hover:text-orange-600 text-xs font-bold"
+                  >
+                    {isAddingCategory ? 'Cancelar' : '+ Nueva'}
+                  </button>
+                </label>
+                
+                {isAddingCategory ? (
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={newCategoryName}
+                      onChange={(e) => setNewCategoryName(e.target.value)}
+                      placeholder="Nueva categoría..."
+                      className="w-full px-3.5 py-2 bg-slate-50 border border-orange-200 rounded-2xl text-slate-900 focus:outline-none focus:bg-white focus:border-orange-500 shadow-2xs font-medium"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddCategory}
+                      className="bg-orange-500 hover:bg-orange-600 text-white px-3 rounded-2xl font-bold transition-colors"
+                    >
+                      Añadir
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex gap-2">
+                    <select
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
+                      className="w-full px-3.5 py-2 bg-slate-50 border border-orange-200 rounded-2xl text-slate-900 focus:outline-none focus:bg-white focus:border-orange-500 cursor-pointer shadow-2xs font-medium"
+                    >
+                      <option value="" disabled>Seleccione categoría</option>
+                      {(settings.categories || []).map((cat) => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                    </select>
+                    {category && onUpdateSettings && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveCategory(category)}
+                        className="p-2 text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                        title="Eliminar categoría seleccionada"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div>

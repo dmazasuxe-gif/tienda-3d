@@ -123,13 +123,7 @@ export const Header: React.FC<HeaderProps> = ({
           )}
         </div>
 
-        {/* Categories Button (Desktop) */}
-        <button 
-          className="hidden md:flex items-center gap-2 bg-[#111111] hover:bg-[#333333] text-white px-6 py-2 rounded-sm font-medium text-sm transition-colors tracking-wide"
-          onClick={() => setMobileMenuOpen(true)}
-        >
-          Categorías
-        </button>
+
 
         {/* Search Bar */}
         <div className="flex-1 max-w-2xl hidden md:flex items-center relative">
@@ -145,10 +139,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Action Buttons */}
         <div className="flex items-center gap-3">
-          <button className="hidden lg:flex items-center gap-2 border border-zinc-200 text-zinc-600 hover:text-[#111111] hover:border-[#111111] px-5 py-2 rounded-sm font-medium text-sm transition-colors">
-            <Bot className="w-4 h-4" />
-            Asistente IA
-          </button>
+
           
           <button 
             onClick={onOpenTracking}
@@ -217,21 +208,17 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="px-4 mb-6">
                 <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3">Categorías</h3>
                 <div className="flex flex-col gap-1">
-                  {products.some(p => p.category === 'impresoras_3d') && (
-                    <button onClick={() => handleCategoryClick('impresoras_3d')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Impresoras 3D</button>
-                  )}
-                  {products.some(p => p.category === 'filamentos') && (
-                    <button onClick={() => handleCategoryClick('filamentos')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Filamentos</button>
-                  )}
-                  {products.some(p => p.category === 'impresiones_3d') && (
-                    <button onClick={() => handleCategoryClick('impresiones_3d')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Impresiones 3D</button>
-                  )}
-                  {products.some(p => p.category === 'corte_laser') && (
-                    <button onClick={() => handleCategoryClick('corte_laser')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Corte Láser</button>
-                  )}
-                  {products.some(p => p.category === 'grabado_laser') && (
-                    <button onClick={() => handleCategoryClick('grabado_laser')} className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700">Grabado Láser</button>
-                  )}
+                  {(settings.categories || []).map(category => (
+                    products.some(p => p.category === category) && (
+                      <button 
+                        key={category}
+                        onClick={() => handleCategoryClick(category)} 
+                        className="text-left px-4 py-3 rounded-xl hover:bg-zinc-50 font-semibold text-zinc-700"
+                      >
+                        {category}
+                      </button>
+                    )
+                  ))}
                 </div>
               </div>
               

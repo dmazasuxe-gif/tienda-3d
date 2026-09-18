@@ -208,15 +208,6 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
               />
             </label>
 
-            <label className="flex items-center justify-between p-3 rounded-2xl bg-zinc-50 border border-zinc-200 cursor-pointer hover:bg-zinc-100 transition-colors">
-              <span className="text-xs font-semibold text-zinc-800">Solo productos en liquidación (Ofertas)</span>
-              <input
-                type="checkbox"
-                checked={filters.onSaleOnly}
-                onChange={(e) => onUpdateFilters({ onSaleOnly: e.target.checked })}
-                className="w-4 h-4 accent-black rounded cursor-pointer"
-              />
-            </label>
           </div>
 
         </div>
