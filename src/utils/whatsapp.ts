@@ -70,7 +70,7 @@ ${itemsList}
 ▫️ Envío: ${order.shippingCost === 0 ? 'GRATIS 🎉' : `${settings.currencySymbol} ${order.shippingCost.toFixed(2)}`}
 🏷️ *MONTO TOTAL EXACTO:* *${settings.currencySymbol} ${order.total.toFixed(2)}*
 
-Por favor confirmen la recepción de mi pedido.`;
+Por favor, me confirman el envío de mi pedido. ¡Gracias!`;
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 };
 
@@ -95,7 +95,7 @@ Acabo de realizar el pago mediante *YAPE / PLIN* 📱💸 de mi pedido *#${order
 ${itemsList}
 
 📸 *Adjunto a este chat la captura de pantalla / comprobante del Yape/Plin.*
-Por favor confirmar la validación para proceder con el empaque y envío. ¡Gracias!`;
+Por favor, me confirman el envío de mi pedido. ¡Gracias!`;
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 };
 
@@ -120,7 +120,7 @@ Acabo de realizar la *TRANSFERENCIA BANCARIA* 🏦📄 de mi pedido *#${order.or
 ${itemsList}
 
 📸 *Adjunto en este mensaje la foto / voucher de la transferencia bancaria.*
-Por favor confirmar la recepción para iniciar el despacho de mi paquete. ¡Gracias!`;
+Por favor, me confirman el envío de mi pedido. ¡Gracias!`;
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 };
 
@@ -160,7 +160,7 @@ ${itemsList}
 - Envío: ${order.shippingCost === 0 ? 'GRATIS 🎉' : `${settings.currencySymbol} ${order.shippingCost.toFixed(2)}`}
 ${order.discount > 0 ? `- Descuento: -${settings.currencySymbol} ${order.discount.toFixed(2)}\n` : ''}⭐ *TOTAL A PAGAR:* ${settings.currencySymbol} ${order.total.toFixed(2)}
 💳 *Método preferido:* ${formatPaymentMethod(order.paymentMethod)}
-¡Quedo atento a la confirmación y datos para coordinar el pago y envío!`;
+Por favor, me confirman el envío de mi pedido. ¡Gracias!`;
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 };
 
