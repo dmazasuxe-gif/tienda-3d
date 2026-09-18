@@ -1,69 +1,57 @@
-import React from 'react';
-import { CategoryType, TechType, Product } from '../types';
+import React, { useMemo } from 'react';
+import { StoreSettings, Product } from '../types';
 
 interface CategoryCardsSectionProps {
   products: Product[];
-  onSelectCategory: (category: CategoryType | 'all', techType: TechType | 'all') => void;
+  settings: StoreSettings;
+  onSelectCategory: (category: string, techType: string) => void;
 }
-
-const CATEGORY_CARDS = [
-  {
-    title: 'IMPRESORAS 3D',
-    category: 'impresoras_3d' as CategoryType,
-    imageUrl: 'https://images.unsplash.com/photo-1629853925585-7098e94a8731?w=800&auto=format&fit=crop&q=80',
-  },
-  {
-    title: 'FILAMENTOS',
-    category: 'filamentos' as CategoryType,
-    imageUrl: 'https://images.unsplash.com/photo-1615286595561-2401dc228ff0?w=800&auto=format&fit=crop&q=80',
-  },
-  {
-    title: 'IMPRESIONES 3D',
-    category: 'impresiones_3d' as CategoryType,
-    imageUrl: 'https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?w=800&auto=format&fit=crop&q=80', // Maceta/Objeto
-  },
-  {
-    title: 'CORTE LÁSER',
-    category: 'corte_laser' as CategoryType,
-    imageUrl: 'https://images.unsplash.com/photo-1582216503923-a1df16f0ceb6?w=800&auto=format&fit=crop&q=80', // Láser
-  },
-  {
-    title: 'GRABADO LÁSER',
-    category: 'grabado_laser' as CategoryType,
-    imageUrl: 'https://images.unsplash.com/photo-1517436073-3b1b11789c62?w=800&auto=format&fit=crop&q=80', // Madera/Grabado
-  }
-];
 
 export const CategoryCardsSection: React.FC<CategoryCardsSectionProps> = ({
   products,
+  settings,
   onSelectCategory,
 }) => {
-  const activeCategories = CATEGORY_CARDS.filter(card => 
-    products.some(p => p.category === card.category)
-  );
+  // Generate active category cards dynamically
+  const activeCategories = useMemo(() => {
+    const cards = [];
+    for (const cat of (settings.categories || [])) {
+      const catProducts = products.filter(p => p.category === cat);
+      if (catProducts.length > 0) {
+        // Use the first product's first image as the category background
+        const firstImage = catProducts.find(p => p.images && p.images.length > 0)?.images[0];
+        cards.push({
+          title: cat.replace(/_/g, ' '), // format label beautifully
+          category: cat,
+          imageUrl: firstImage || 'https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?w=800&auto=format&fit=crop&q=80',
+        });
+      }
+    }
+    return cards;
+  }, [products, settings.categories]);
 
   if (activeCategories.length === 0) return null;
 
   return (
     <section className="py-10 max-w-[1400px] mx-auto px-4 sm:px-6">
-      <div className="flex gap-4 overflow-x-auto pb-4 snap-x hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      <div className="flex gap-4 sm:gap-6 overflow-x-auto pb-6 snap-x hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         {activeCategories.map((card) => (
           <div
             key={card.title}
             onClick={() => onSelectCategory(card.category, 'all')}
-            className="group cursor-pointer flex-shrink-0 w-32 md:w-48 lg:w-56 flex flex-col snap-start"
+            className="group cursor-pointer flex-shrink-0 w-36 sm:w-48 md:w-56 flex flex-col snap-start"
           >
-            <div className="relative aspect-[3/4] w-full rounded-3xl overflow-hidden bg-zinc-900 shadow-sm border border-zinc-800">
+            <div className="relative aspect-square sm:aspect-[4/5] w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-zinc-100 shadow-sm border border-zinc-200">
               <img
                 src={card.imageUrl}
                 alt={card.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out opacity-80"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out opacity-90"
                 referrerPolicy="no-referrer"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-              <div className="absolute bottom-4 left-0 right-0 px-2 text-center">
-                <h3 className="text-xs sm:text-sm font-bold tracking-wide text-white uppercase drop-shadow-md">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute bottom-4 left-0 right-0 px-3 text-center">
+                <h3 className="text-xs sm:text-sm font-black tracking-widest text-white uppercase drop-shadow-md">
                   {card.title}
                 </h3>
               </div>

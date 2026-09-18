@@ -727,24 +727,17 @@ export default function App() {
 
           <Banner settings={settings} />
 
-          {/* Bloques Destacados de Carruseles (Visibles en Vista General / Home) */}
+          {/* Bloques de Categorías (Visibles en Vista General / Home) */}
           {isHomeView && (
-            <>
-              {Object.entries(productsByCategory).map(([cat, catProducts]) => (
-                <ProductCarouselSection
-                  key={cat}
-                  title={`${cat.toUpperCase()} DESTACADOS`}
-                  products={catProducts}
-                  settings={settings}
-                  onOpenProduct={(p) => setSelectedProduct(p)}
-                  onViewAll={() => {
-                    setSelectedCategory(cat);
-                    setSelectedTechType('all');
-                    setCurrentPage(1);
-                  }}
-                />
-              ))}
-            </>
+            <CategoryCardsSection
+              products={products}
+              settings={settings}
+              onSelectCategory={(cat, tech) => {
+                setSelectedCategory(cat);
+                setSelectedTechType(tech);
+                setCurrentPage(1);
+              }}
+            />
           )}
 
           {/* Main Catalog Grid */}
