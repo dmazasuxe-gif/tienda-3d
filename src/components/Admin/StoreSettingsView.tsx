@@ -459,7 +459,7 @@ export const StoreSettingsView: React.FC<StoreSettingsViewProps> = ({
               value={formData.storeName}
               onChange={(e) => setFormData({ ...formData, storeName: e.target.value })}
               className="w-full px-3.5 py-2.5 bg-slate-50 border border-orange-200 rounded-2xl text-slate-900 font-bold text-sm focus:outline-none focus:bg-white focus:border-orange-500 shadow-2xs"
-              placeholder="Ej. AURA MODA & CALZADO"
+              placeholder="Ej. MQ3D"
             />
           </div>
 
@@ -796,7 +796,7 @@ export const StoreSettingsView: React.FC<StoreSettingsViewProps> = ({
             value={formData.bannerNotice}
             onChange={(e) => setFormData({ ...formData, bannerNotice: e.target.value })}
             className="w-full px-3.5 py-2.5 bg-slate-50 border border-orange-200 rounded-2xl text-slate-900 focus:outline-none focus:bg-white focus:border-orange-500 shadow-2xs"
-            placeholder="Ej. ✨ ENVÍO GRATIS en compras mayores a S/ 199 | 20% OFF en Calzado"
+            placeholder="Ej. ✨ ENVÍO GRATIS en compras mayores a S/ 199 | 20% OFF en Filamentos"
           />
         </div>
       </div>

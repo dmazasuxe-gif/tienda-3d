@@ -1,5 +1,5 @@
 export type CategoryType = 'impresoras_3d' | 'filamentos' | 'impresiones_3d' | 'corte_laser' | 'grabado_laser';
-export type TechType = 'fdm' | 'resina' | 'laser' | 'cnc' | 'accesorio' | 'unisex';
+export type TechType = 'fdm' | 'sla' | 'laser_diodo' | 'laser_co2' | 'cnc' | 'otro';
 
 export type ElementType = 'barcode' | 'text' | 'image';
 

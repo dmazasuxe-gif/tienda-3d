@@ -38,23 +38,23 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
   const avgTicket = validOrders.length > 0 ? totalRevenue / validOrders.length : 0;
 
   // Category revenue split
-  let calzadoRevenue = 0;
-  let ropaRevenue = 0;
+  let revenue3D = 0;
+  let revenueLaser = 0;
 
   validOrders.forEach((o) => {
     o.items.forEach((item) => {
       const itemTotal = item.product.price * item.quantity;
-      if (item.product.category === 'calzado') {
-        calzadoRevenue += itemTotal;
+      if (item.product.category.includes('laser')) {
+        revenueLaser += itemTotal;
       } else {
-        ropaRevenue += itemTotal;
+        revenue3D += itemTotal;
       }
     });
   });
 
-  const totalCatSum = calzadoRevenue + ropaRevenue || 1;
-  const calzadoPercent = Math.round((calzadoRevenue / totalCatSum) * 100);
-  const ropaPercent = Math.round((ropaRevenue / totalCatSum) * 100);
+  const totalCatSum = revenue3D + revenueLaser || 1;
+  const percent3D = Math.round((revenue3D / totalCatSum) * 100);
+  const percentLaser = Math.round((revenueLaser / totalCatSum) * 100);
 
   const handleDownloadPdf = () => {
     setIsExportingPdf(true);
@@ -196,7 +196,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
               {totalUnitsSold} uds
             </p>
             <span className="text-[11px] text-emerald-700 mt-1 block font-semibold">
-              Calzado y moda despachada
+              Productos y servicios despachados
             </span>
           </div>
         </div>
@@ -216,27 +216,27 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
           <div className="space-y-3">
             <div>
               <div className="flex justify-between text-xs font-bold mb-1">
-                <span className="text-slate-700">👟 Calzado ({calzadoPercent}%)</span>
-                <span className="text-orange-700 font-extrabold">{settings.currencySymbol} {calzadoRevenue.toFixed(2)}</span>
+                <span className="text-slate-700">🖨️ Impresión 3D ({percent3D}%)</span>
+                <span className="text-orange-700 font-extrabold">{settings.currencySymbol} {revenue3D.toFixed(2)}</span>
               </div>
               <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden border border-orange-100">
-                <div className="h-full bg-gradient-to-r from-orange-500 to-blue-600 rounded-full" style={{ width: `${calzadoPercent}%` }} />
+                <div className="h-full bg-gradient-to-r from-orange-500 to-blue-600 rounded-full" style={{ width: `${percent3D}%` }} />
               </div>
             </div>
 
             <div>
               <div className="flex justify-between text-xs font-bold mb-1">
-                <span className="text-slate-700">👔 Ropa & Moda ({ropaPercent}%)</span>
-                <span className="text-purple-700 font-extrabold">{settings.currencySymbol} {ropaRevenue.toFixed(2)}</span>
+                <span className="text-slate-700">✂️ Láser ({percentLaser}%)</span>
+                <span className="text-purple-700 font-extrabold">{settings.currencySymbol} {revenueLaser.toFixed(2)}</span>
               </div>
               <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden border border-orange-100">
-                <div className="h-full bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full" style={{ width: `${ropaPercent}%` }} />
+                <div className="h-full bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full" style={{ width: `${percentLaser}%` }} />
               </div>
             </div>
           </div>
 
           <div className="pt-2 text-xs text-slate-500">
-            📊 El calzado representa la principal fuente de ingresos con alta rotación en tallas 40-42 y calzado de temporada.
+            📊 Distribución de ingresos divididos por tipo de tecnología (3D y Láser).
           </div>
         </div>
 

@@ -334,9 +334,9 @@ export default function App() {
         return false;
       }
 
-      // 3. Gender Filter
+      // 3. Tech Filter
       if (selectedTechType !== 'all') {
-        if (product.techType !== selectedTechType && product.techType !== 'unisex') {
+        if (product.techType !== selectedTechType && product.techType !== 'otro') {
           return false;
         }
       }
@@ -814,7 +814,7 @@ export default function App() {
                 </div>
                 <h3 className="text-lg font-black text-black uppercase">No encontramos productos coincidentes</h3>
                 <p className="text-xs text-zinc-500">
-                  Intenta cambiar las tallas, filtros o términos de búsqueda seleccionados.
+                  Intenta cambiar las categorías, filtros o términos de búsqueda seleccionados.
                 </p>
                 <button
                   onClick={() => {

@@ -97,38 +97,6 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
         {/* Scrollable Filter Options */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-6 text-sm">
           
-          {/* 1. Tallas Filter */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <label className="font-bold text-black text-xs uppercase tracking-wider">
-                Talla EUR
-              </label>
-              {filters.selectedSizes.length > 0 && (
-                <span className="text-[11px] text-zinc-500 font-bold">
-                  {filters.selectedSizes.length} seleccionadas
-                </span>
-              )}
-            </div>
-            
-            <div className="flex flex-wrap gap-2">
-              {availableSizes.map((size) => {
-                const isSelected = filters.selectedSizes.includes(size);
-                return (
-                  <button
-                    key={size}
-                    onClick={() => toggleSize(size)}
-                    className={`min-w-10 h-10 px-3 rounded-lg text-xs font-bold border transition-all flex items-center justify-center cursor-pointer ${
-                      isSelected
-                        ? 'bg-black text-white border-black font-black shadow-xs'
-                        : 'bg-white text-zinc-800 border-zinc-200 hover:border-zinc-400 hover:bg-zinc-50'
-                    }`}
-                  >
-                    {size}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
 
           {/* 2. Colores Filter */}
           <div>

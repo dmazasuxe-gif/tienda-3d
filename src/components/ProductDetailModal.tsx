@@ -218,43 +218,6 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                   )}
                 </div>
 
-                {/* Size Selector matching Yolu screenshot 7 */}
-                <div className="space-y-2 pt-2">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-extrabold uppercase tracking-wider text-black">
-                      TALLAS EUR
-                    </span>
-                    {selectedSize && (
-                      <button
-                        onClick={() => setSelectedSize('')}
-                        className="text-zinc-400 hover:text-black text-xs font-semibold cursor-pointer underline"
-                      >
-                        Limpiar
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Size buttons grid */}
-                  <div className="flex flex-wrap gap-2">
-                    {product.sizes.map((sz) => {
-                      const isSelected = selectedSize === sz;
-                      return (
-                        <button
-                          key={sz}
-                          onClick={() => setSelectedSize(sz)}
-                          className={`min-w-11 h-10 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer border ${
-                            isSelected
-                              ? 'bg-black text-white border-black font-black'
-                              : 'bg-white text-zinc-800 border-zinc-200 hover:border-black'
-                          }`}
-                        >
-                          {sz}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
                 {/* Color Selector */}
                 {product.colors && product.colors.length > 0 && (
                   <div className="space-y-2 pt-1">

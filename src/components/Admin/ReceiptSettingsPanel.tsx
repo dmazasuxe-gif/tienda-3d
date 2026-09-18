@@ -287,7 +287,7 @@ export const ReceiptSettingsPanel: React.FC<ReceiptSettingsPanelProps> = ({ sett
             value={rs.legalName}
             onChange={(e) => updateField('legalName', e.target.value)}
             className="w-full px-3.5 py-2.5 bg-slate-50 border border-orange-200 rounded-2xl text-slate-900 focus:outline-none focus:bg-white focus:border-orange-500 shadow-2xs"
-            placeholder="Ej: AURA MODA & CALZADO S.A.C."
+            placeholder="Ej: IMPRESIONES 3D AURA S.A.C."
           />
         </div>
 

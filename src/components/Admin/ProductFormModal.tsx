@@ -52,7 +52,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
   const [stock, setStock] = useState(10);
   const [lowStockThreshold, setLowStockThreshold] = useState(4);
   const [images, setImages] = useState<string[]>([]);
-  const [sizes, setSizes] = useState<string[]>([]);
+  const [sizes, setSizes] = useState<string[]>(['Única']);
   const [customSizeInput, setCustomSizeInput] = useState('');
   const [colors, setColors] = useState<ProductColor[]>([]);
   const [customColorName, setCustomColorName] = useState('');
@@ -136,7 +136,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
       setStock(12);
       setLowStockThreshold(4);
       setImages([]);
-      setSizes(['39', '40', '41', '42']);
+      setSizes(['Única']);
       setColors([
         { name: 'Negro', hex: '#09090b' },
         { name: 'Blanco', hex: '#f8fafc' }
@@ -244,7 +244,6 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
     if (!description.trim()) newErrors.description = 'La descripción es obligatoria';
     if (price <= 0) newErrors.price = 'El precio debe ser mayor a 0';
     if (images.length === 0) newErrors.images = 'Debes incluir al menos una imagen';
-    if (sizes.length === 0) newErrors.sizes = 'Debes seleccionar al menos una talla';
     if (colors.length === 0) newErrors.colors = 'Debes seleccionar al menos un color';
 
     if (Object.keys(newErrors).length > 0) {
@@ -511,10 +510,12 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
                   onChange={(e) => setTechType(e.target.value as TechType)}
                   className="w-full px-3.5 py-2 bg-slate-50 border border-orange-200 rounded-2xl text-slate-900 focus:outline-none focus:bg-white focus:border-orange-500 cursor-pointer shadow-2xs font-medium"
                 >
-                  <option value="varones">Hombres / Varones</option>
-                  <option value="mujeres">Mujeres / Damas</option>
-                  <option value="ninos">Niños / Niñas (Kids)</option>
-                  <option value="unisex">Unisex</option>
+                  <option value="fdm">FDM (Filamento)</option>
+                  <option value="sla">SLA (Resina)</option>
+                  <option value="laser_diodo">Corte Láser (Diodo)</option>
+                  <option value="laser_co2">Corte Láser (CO2)</option>
+                  <option value="cnc">CNC</option>
+                  <option value="otro">Otro / General</option>
                 </select>
               </div>
 
@@ -665,54 +666,9 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
 
           {/* Sizes Configuration */}
           <div className="space-y-3 pt-2 border-t border-orange-100">
+
             <h3 className="font-bold uppercase tracking-wider text-orange-800 text-[11px]">
-              4. Tallas Disponibles ({sizes.length}) *
-            </h3>
-
-            <div className="flex flex-wrap gap-1.5">
-              {standardSizes.map((sz) => {
-                const isSelected = sizes.includes(sz);
-                return (
-                  <button
-                    key={sz}
-                    type="button"
-                    onClick={() => toggleSize(sz)}
-                    className={`min-w-9 h-8 px-2.5 rounded-xl font-bold text-xs border transition-all cursor-pointer ${
-                      isSelected
-                        ? 'bg-orange-600 text-white border-orange-600 font-black shadow-xs'
-                        : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-orange-300'
-                    }`}
-                  >
-                    {sz}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Custom size adder */}
-            <div className="flex gap-2 max-w-xs">
-              <input
-                type="text"
-                placeholder="Otra talla (ej. 38.5)"
-                value={customSizeInput}
-                onChange={(e) => setCustomSizeInput(e.target.value)}
-                className="flex-1 px-3.5 py-1.5 bg-slate-50 border border-orange-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-orange-500 shadow-2xs"
-              />
-              <button
-                type="button"
-                onClick={handleAddCustomSize}
-                className="px-3.5 py-1.5 bg-orange-50 hover:bg-orange-100 text-orange-800 rounded-2xl font-bold border border-orange-200 cursor-pointer shadow-2xs"
-              >
-                +
-              </button>
-            </div>
-            {errors.sizes && <p className="text-rose-600 text-[10px]">{errors.sizes}</p>}
-          </div>
-
-          {/* Colors Configuration */}
-          <div className="space-y-3 pt-2 border-t border-orange-100">
-            <h3 className="font-bold uppercase tracking-wider text-orange-800 text-[11px]">
-              5. Colores Disponibles ({colors.length}) *
+              4. Colores Disponibles ({colors.length}) *
             </h3>
 
             <div className="flex flex-wrap gap-2">
@@ -768,7 +724,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
           {/* Additional details: Materials & Care & Flags */}
           <div className="space-y-3 pt-2 border-t border-orange-100">
             <h3 className="font-bold uppercase tracking-wider text-orange-800 text-[11px]">
-              6. Materiales & Opciones
+              5. Materiales & Opciones
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -776,7 +732,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
                 <label className="block text-slate-700 font-semibold mb-1">Composición / Materiales</label>
                 <input
                   type="text"
-                  placeholder="Ej. 100% Cuero Vacuno, Forro textil"
+                  placeholder="Ej. PLA+, PETG, MDF 3mm, Acrílico"
                   value={materials}
                   onChange={(e) => setMaterials(e.target.value)}
                   className="w-full px-3.5 py-2 bg-slate-50 border border-orange-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-orange-500 shadow-2xs"
@@ -787,7 +743,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
                 <label className="block text-slate-700 font-semibold mb-1">Guía de Cuidados</label>
                 <input
                   type="text"
-                  placeholder="Ej. Limpiar en seco, no usar cloro"
+                  placeholder="Ej. Evitar exposición prolongada al sol, limpiar en seco"
                   value={careGuide}
                   onChange={(e) => setCareGuide(e.target.value)}
                   className="w-full px-3.5 py-2 bg-slate-50 border border-orange-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-orange-500 shadow-2xs"

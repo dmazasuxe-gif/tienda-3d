@@ -89,7 +89,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   const [productToEdit, setProductToEdit] = useState<Product | null>(null);
   const [initialBarcode, setInitialBarcode] = useState<string | undefined>();
   const [productSearch, setProductSearch] = useState('');
-  const [productCategoryFilter, setProductCategoryFilter] = useState<'all' | 'calzado' | 'ropa'>('all');
+  const [productCategoryFilter, setProductCategoryFilter] = useState<'all' | CategoryType>('all');
 
   // Badge calculations
   const pendingOrdersCount = orders.filter((o) => o.status === 'pendiente').length;
@@ -239,17 +239,17 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                 </div>
 
                 <div className="flex gap-1">
-                  {(['all', 'calzado', 'ropa'] as const).map((cat) => (
+                  {(['all', 'impresoras_3d', 'filamentos', 'impresiones_3d', 'corte_laser', 'grabado_laser'] as const).map((cat) => (
                     <button
                       key={cat}
-                      onClick={() => setProductCategoryFilter(cat)}
-                      className={`px-3 py-2 rounded-2xl text-xs font-bold capitalize transition-colors cursor-pointer ${
+                      onClick={() => setProductCategoryFilter(cat as 'all' | CategoryType)}
+                      className={`px-3 py-2 rounded-2xl text-xs font-bold capitalize transition-colors cursor-pointer whitespace-nowrap ${
                         productCategoryFilter === cat
                           ? 'bg-orange-600 text-white shadow-xs'
                           : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200'
                       }`}
                     >
-                      {cat === 'all' ? 'Todos' : cat}
+                      {cat === 'all' ? 'Todos' : cat.replace(/_/g, ' ')}
                     </button>
                   ))}
                 </div>
