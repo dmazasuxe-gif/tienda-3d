@@ -820,15 +820,8 @@ export default function App() {
                     <ProductCard
                       key={product.id}
                       product={product}
-                      index={idx}
                       settings={settings}
-                      onOpenDetails={(p) => setSelectedProduct(p || product)}
-                      onOpenDetail={(p) => setSelectedProduct(p || product)}
-                      onQuickAddToCart={(p) => {
-                        const target = p || product;
-                        handleAddToCart(target, target.sizes[0], target.colors[0], 1);
-                      }}
-                      onAddToCart={(size, color) => handleAddToCart(product, size, color, 1)}
+                      onClick={(p) => setSelectedProduct(p)}
                     />
                   ))}
                 </div>
