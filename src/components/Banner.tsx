@@ -46,13 +46,21 @@ export const Banner: React.FC<BannerProps> = ({ settings }) => {
           transition={{ duration: 0.8, ease: "easeInOut" }}
           className="absolute inset-0"
         >
+          {/* Blurred Background to fill empty space for non-wide images */}
+          <img
+            src={slides[currentIndex].imageUrl}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover object-center blur-2xl opacity-60 scale-110"
+            referrerPolicy="no-referrer"
+          />
+          {/* Actual uncropped image */}
           <img
             src={slides[currentIndex].imageUrl}
             alt={`Promotional slide ${currentIndex + 1}`}
-            className="w-full h-full object-cover object-center"
+            className="relative w-full h-full object-contain object-center drop-shadow-2xl"
             referrerPolicy="no-referrer"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/40" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/40 pointer-events-none" />
         </motion.div>
       </AnimatePresence>
 
