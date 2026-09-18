@@ -55,12 +55,13 @@ export const ProductImagesManager: React.FC<ProductImagesManagerProps> = ({ sett
   };
 
   const handleSave = () => {
-    onSaveSettings({
+    const updated = {
       ...settings,
       productStripImages: images,
       productStripSpeed: speed
-    });
-    alert('Imágenes guardadas correctamente.');
+    };
+    onSaveSettings(updated);
+    alert('✅ Pasarela guardada correctamente');
   };
 
   return (
@@ -152,6 +153,32 @@ export const ProductImagesManager: React.FC<ProductImagesManagerProps> = ({ sett
           ))}
         </div>
       )}
+
+      {/* Speed Configuration */}
+      <div className="mt-8 border-t border-slate-200 pt-6">
+        <h3 className="font-bold text-slate-800 flex items-center gap-2 mb-4">
+          <Save className="w-5 h-5 text-emerald-600" />
+          Velocidad de Animación
+        </h3>
+        <div className="flex items-center gap-4 max-w-md">
+          <span className="text-sm text-slate-500 font-medium whitespace-nowrap">Más rápido</span>
+          <input 
+            type="range" 
+            min="10" 
+            max="100" 
+            step="5"
+            value={speed} 
+            onChange={(e) => setSpeed(Number(e.target.value))}
+            className="flex-1 accent-emerald-600 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer"
+            style={{ direction: 'rtl' }}
+          />
+          <span className="text-sm text-slate-500 font-medium whitespace-nowrap">Más lento</span>
+        </div>
+        <p className="text-xs text-slate-400 mt-2">
+          Ajusta la velocidad a la que se mueven las imágenes. Valor actual: {speed}s por ciclo.
+        </p>
+      </div>
+
     </div>
   );
 };

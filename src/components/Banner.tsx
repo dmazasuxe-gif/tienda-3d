@@ -36,7 +36,7 @@ export const Banner: React.FC<BannerProps> = ({ settings }) => {
   };
 
   return (
-    <section className="relative w-full h-[60vh] sm:h-[70vh] md:h-[80vh] bg-zinc-900 overflow-hidden group">
+    <section className="relative w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[21/9] bg-zinc-900 overflow-hidden group">
       <AnimatePresence mode="popLayout">
         <motion.div
           key={currentIndex}
@@ -53,11 +53,11 @@ export const Banner: React.FC<BannerProps> = ({ settings }) => {
             className="absolute inset-0 w-full h-full object-cover object-center blur-2xl opacity-60 scale-110"
             referrerPolicy="no-referrer"
           />
-          {/* Actual uncropped image */}
+          {/* Actual image framed dynamically */}
           <img
             src={slides[currentIndex].imageUrl}
             alt={`Promotional slide ${currentIndex + 1}`}
-            className="relative w-full h-full object-contain object-center drop-shadow-2xl"
+            className="relative w-full h-full object-cover object-center md:object-contain drop-shadow-2xl"
             referrerPolicy="no-referrer"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/40 pointer-events-none" />

@@ -25,7 +25,8 @@ import {
   Barcode,
   Printer,
   Image as ImageIcon,
-  Images
+  Images,
+  Type
 } from 'lucide-react';
 import { ProductFormModal } from './ProductFormModal';
 import { OrderManager } from './OrderManager';
@@ -37,6 +38,7 @@ import { ProductImagesManager } from './ProductImagesManager';
 import { RunwayManager } from './RunwayManager';
 import { LabelDesigner } from './LabelDesigner';
 import { ProductLabelPrinter } from './ProductLabelPrinter';
+import { TopBarManager } from './TopBarManager';
 
 interface AdminLayoutProps {
   products: Product[];
@@ -55,7 +57,7 @@ interface AdminLayoutProps {
   onTabChange?: (tab: AdminTab) => void;
 }
 
-type AdminTab = 'scanner' | 'products' | 'orders' | 'reports' | 'stock' | 'runway' | 'brands' | 'labels' | 'settings';
+type AdminTab = 'scanner' | 'products' | 'orders' | 'reports' | 'stock' | 'runway' | 'brands' | 'topbar' | 'labels' | 'settings';
 
 export const AdminLayout: React.FC<AdminLayoutProps> = ({
   products,
@@ -190,6 +192,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
             { id: 'labels' as const, label: 'Diseñador de Etiquetas', icon: Barcode },
             { id: 'runway' as const, label: 'Banners Principales', icon: ImageIcon, count: (settings.runwaySlides && settings.runwaySlides.length > 0) ? settings.runwaySlides.length : 0, badgeColor: 'bg-indigo-100 text-indigo-800 border border-indigo-200' },
             { id: 'brands' as const, label: 'Pasarela de Productos', icon: Images, count: (settings.productStripImages?.length || 0), badgeColor: 'bg-emerald-100 text-emerald-800 border border-emerald-200' },
+            { id: 'topbar' as const, label: 'Cintillo Superior', icon: Type },
             { id: 'settings' as const, label: 'Configuración Tienda & WhatsApp', icon: SettingsIcon }
           ].map((tab) => {
             const Icon = tab.icon;
@@ -417,6 +420,14 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         {/* Tab: Product Images Manager */}
         {activeTab === 'brands' && (
           <ProductImagesManager
+            settings={settings}
+            onSaveSettings={onSaveSettings}
+          />
+        )}
+
+        {/* Tab: Top Bar Manager */}
+        {activeTab === 'topbar' && (
+          <TopBarManager
             settings={settings}
             onSaveSettings={onSaveSettings}
           />

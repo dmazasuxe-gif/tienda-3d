@@ -554,40 +554,52 @@ export default function App() {
   const handleSaveProduct = (product: Product) => {
     setProducts((prev) => {
       const exists = prev.some((p) => p.id === product.id);
-      if (exists) {
-        return prev.map((p) => (p.id === product.id ? product : p));
-      } else {
-        return [product, ...prev];
-      }
+      const updated = exists 
+        ? prev.map((p) => (p.id === product.id ? product : p))
+        : [product, ...prev];
+      saveStoredProducts(updated);
+      return updated;
     });
     syncSaveProduct(product);
   };
 
   const handleDeleteProduct = (productId: string) => {
-    setProducts((prev) => prev.filter((p) => p.id !== productId));
+    setProducts((prev) => {
+      const updated = prev.filter((p) => p.id !== productId);
+      saveStoredProducts(updated);
+      return updated;
+    });
     syncDeleteProduct(productId);
   };
 
   const handleUpdateProductStock = (productId: string, newStock: number) => {
-    setProducts((prev) =>
-      prev.map((p) => (p.id === productId ? { ...p, stock: Math.max(0, newStock) } : p))
-    );
+    setProducts((prev) => {
+      const updated = prev.map((p) => (p.id === productId ? { ...p, stock: Math.max(0, newStock) } : p));
+      saveStoredProducts(updated);
+      return updated;
+    });
     syncReduceStock(productId, newStock);
   };
 
   const handleDeleteOrder = (orderId: string) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar esta orden de forma permanente?')) {
-      setOrders((prev) => prev.filter((o) => o.id !== orderId));
+      setOrders((prev) => {
+        const updated = prev.filter((o) => o.id !== orderId);
+        saveStoredOrders(updated);
+        return updated;
+      });
       syncDeleteOrder(orderId);
     }
   };
 
   const handleUpdateOrderStatus = (orderId: string, status: OrderStatus) => {
-    setOrders((prev) =>
-      prev.map((o) =>
+    setOrders((prev) => {
+      const updated = prev.map((o) =>
         o.id === orderId ? { ...o, status, updatedAt: new Date().toISOString() } : o
-      )
-    );
+      );
+      saveStoredOrders(updated);
+      return updated;
+    });
     syncUpdateOrderStatus(orderId, status);
   };
 
